@@ -9,4 +9,7 @@ MIL 10 R2 for Windows (64-bit)
 MIL 10 R3 for Linux (64-bit)
 
 
+Note: Linux libs larger than githubs 50 mb size limits, so will not build without obtaining the vendor SDK.
+
+
 
