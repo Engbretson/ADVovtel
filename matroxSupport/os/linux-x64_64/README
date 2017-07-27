@@ -1,0 +1,12 @@
+The RHEL 7 Version of the Matrox divers only work up to release 1511 (7.2).
+
+The windows and Linux versions are not at the same release level so header files may or may not be consistant between versions.
+
+Matrox MIL is licensed software. One may contact Matrox for access to a time limited trial
+
+MIL 10 R2 for Windows (32-bit)
+MIL 10 R2 for Windows (64-bit)
+MIL 10 R3 for Linux (64-bit)
+
+
+
