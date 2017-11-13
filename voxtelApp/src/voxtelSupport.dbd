@@ -1,1 +1,1 @@
-registrar("drvxoxtelRegisterCommands")
+registrar("voxtelRegister")

@@ -1,53 +1,60 @@
 TOP=..
 include $(TOP)/configure/CONFIG
+ 
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
-# Note, the files in this directory were manually copied from the Maxtro MIL directories 
+# Note, the files in this directory were manually copied from the Andor SDK directories 
+# for Linux and Windows.  The soft links for Linux were manually created.
+
+#copied from win32 version... assume win64 is same h files.
+
+INC += mbasictypes.h
+INC += MdispD3D.h
+INC += mil.h
+INC += mildec.h
+INC += MilDyn.h
+INC += Milerr.h
+INC += milfpga.h
+INC += milfunc.h
+INC += milfuncll.h
+INC += milfunctioncode.h
+INC += milos.h
+INC += milproto.h
+INC += milsetup.h
+
+INC += MILDyn/mil3dmap.h
+INC += MILDyn/milbead.h
+INC += MILDyn/milblob.h
+INC += MILDyn/milcal.h
+INC += MILDyn/milcode.h
+INC += MILDyn/milcolor.h
+INC += MILDyn/mildisplay.h
+INC += MILDyn/miledge.h
+INC += MILDyn/milim.h
+INC += MILDyn/milmeas.h
+INC += MILDyn/milmetrol.h
+INC += MILDyn/milmod.h
+INC += MILDyn/milocr.h
+INC += MILDyn/milpat.h
+INC += MILDyn/milreg.h
+INC += MILDyn/milstr.h
+
+
 
 ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
+LIB_INSTALLS_WIN32    += ../os/windows-x64/Mil.lib
+#else ifeq (linux-x86_64, $(findstring linux-x86_64, $(T_A)))
 
-INC += ./os/windows-x64/includes/mbasictypes.h
-INC += ./os/windows-x64/includes/MdispD3D.h
-INC += ./os/windows-x64/includes/mil.h
-INC += ./os/windows-x64/includes/mildec.h
-INC += ./os/windows-x64/includes/MilDyn.h
-INC += ./os/windows-x64/includes/Milerr.h
-INC += ./os/windows-x64/includes/milfpga.h
-INC += ./os/windows-x64/includes/milfunc.h
-INC += ./os/windows-x64/includes/milfuncll.h
-INC += ./os/windows-x64/includes/milfunctioncode.h
-INC += ./os/windows-x64/includes/milos.h
-INC += ./os/windows-x64/includes/milproto.h
-INC += ./os/windows-x64/includes/milsetup.h
+#else ifeq (linux-x86, $(findstring linux-x86, $(T_A)))
 
-INC += ./os/windows-x64/includes/MILDyn/mil3dmap.h
-INC += ./os/windows-x64/includes/MILDyn/milbead.h
-INC += ./os/windows-x64/includes/MILDyn/milblob.h
-INC += ./os/windows-x64/includes/MILDyn/milcal.h
-INC += ./os/windows-x64/includes/MILDyn/milcode.h
-INC += ./os/windows-x64/includes/MILDyn/milcolor.h
-INC += ./os/windows-x64/includes/MILDyn/mildisplay.h
-INC += ./os/windows-x64/includes/MILDyn/miledge.h
-INC += ./os/windows-x64/includes/MILDyn/milim.h
-INC += ./os/windows-x64/includes/MILDyn/milmeas.h
-INC += ./os/windows-x64/includes/MILDyn/milmetrol.h
-INC += ./os/windows-x64/includes/MILDyn/milmod.h
-INC += ./os/windows-x64/includes/MILDyn/milocr.h
-INC += ./os/windows-x64/includes/MILDyn/milpat.h
-INC += ./os/windows-x64/includes/MILDyn/milreg.h
-INC += ./os/windows-x64/includes/MILDyn/milstr.h
 endif
-
-ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
-LIB_INSTALLS_WIN32    += ../os/windows-x64/libs/Mil.lib
-endif
-
 
 #=============================
 
 include $(TOP)/configure/RULES
+
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 

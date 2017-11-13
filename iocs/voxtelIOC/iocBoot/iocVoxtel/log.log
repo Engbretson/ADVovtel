@@ -1,0 +1,413 @@
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>set EPICS_CA_MAX_ARRAY_BYTES=10000000 
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>set EPICS_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\adl;C:\epics\synApps_5_8\support\areaDetector-R3-1\ADCore\ADApp\op\adl 
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>start medm -x -macro "P=Voxtel1:, R=cam1:" Voxtel_Control.adl  
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>start medm -x -macro "P=Voxtel1:, R=cam1:" VoxtelDetector.adl  
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>..\..\bin\windows-x64-static\voxtelApp.exe st.cmd 
+# Must have loaded envPaths via st.cmd.linux or st.cmd.win32
+< envPaths
+epicsEnvSet("IOC","iocVOXTEL")
+epicsEnvSet("TOP","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC")
+epicsEnvSet("ADVOXTEL","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../..")
+epicsEnvSet("SUPPORT","C:/epics/synApps_5_8/support")
+epicsEnvSet("AREA_DETECTOR","C:/epics/synApps_5_8/support/areaDetector-R3-1")
+epicsEnvSet("EPICS_BASE","C:/epics/base-3.16.1")
+epicsEnvSet("EV4_BASE","C:/epics/EPICS-CPP-4.6.0")
+epicsEnvSet("ASYN","C:/epics/synApps_5_8/support/asyn-4-31")
+epicsEnvSet("ADSUPPORT","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADSupport")
+epicsEnvSet("ADCORE","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore")
+epicsEnvSet("PVCOMMON","C:/epics/EPICS-CPP-4.6.0/pvCommonCPP")
+epicsEnvSet("PVACCESS","C:/epics/EPICS-CPP-4.6.0/pvAccessCPP")
+epicsEnvSet("PVDATA","C:/epics/EPICS-CPP-4.6.0/pvDataCPP")
+epicsEnvSet("PVDATABASE","C:/epics/EPICS-CPP-4.6.0/pvDatabaseCPP")
+epicsEnvSet("NORMATIVETYPES","C:/epics/EPICS-CPP-4.6.0/normativeTypesCPP")
+epicsEnvSet("AUTOSAVE","C:/epics/synApps_5_8/support/autosave-5-8")
+epicsEnvSet("BUSY","C:/epics/synApps_5_8/support/busy-1-6-1")
+epicsEnvSet("CALC","C:/epics/synApps_5_8/support/calc-master")
+epicsEnvSet("SNCSEQ","C:/epics/synApps_5_8/support/seq-2-2-4")
+epicsEnvSet("SSCAN","C:/epics/synApps_5_8/support/sscan-2-10-2")
+epicsEnvSet("DEVIOCSTATS","C:/epics/synApps_5_8/support/devIocStats-3-1-15")
+epicsEnvSet("ALIVE","C:/epics/synApps_5_8/support/alive-1-0-1")
+errlogInit(20000)
+dbLoadDatabase("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/dbd/voxtelApp.dbd")
+voxtelApp_registerRecordDeviceDriver(pdbbase) 
+# Prefix for all records
+#epicsEnvSet("PREFIX", "13SIM1:")
+# The port name for the detector
+#epicsEnvSet("PORT",   "SIM1")
+# The queue size for all plugins
+epicsEnvSet("QSIZE",  "20")
+# The maximum image width; used to set the maximum size for this driver and for row profiles in the NDPluginStats plugin
+epicsEnvSet("XSIZE",  "192")
+# The maximum image height; used to set the maximum size for this driver and for column profiles in the NDPluginStats plugin
+epicsEnvSet("YSIZE",  "384")
+# The maximum number of time series points in the NDPluginStats plugin
+epicsEnvSet("NCHANS", "2048")
+# The maximum number of frames buffered in the NDPluginCircularBuff plugin
+epicsEnvSet("CBUFFS", "500")
+# The maximum number of threads for plugins which can run in multiple threads
+epicsEnvSet("MAX_THREADS", "8")
+# The search path for database files
+epicsEnvSet("EPICS_DB_INCLUDE_PATH", "C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/db")
+epicsEnvSet("IOC","ioc7bmVOXTEL")
+epicsEnvSet("LOCATION","437-B005")
+epicsEnvSet("ENGINEER","Engbretson")
+epicsEnvSet("PREFIX",  "Voxtel1:")
+epicsEnvSet("PORT",   "VOXTELIOC")
+epicsEnvSet("GROUP",   "BCDA")
+asynSetMinTimerPeriod(0.001)
+# The EPICS environment variable EPICS_CA_MAX_ARRAY_BYTES needs to be set to a value at least as large
+# as the largest image that the standard arrays plugin will send.
+# That vlaue is $(XSIZE) * $(YSIZE) * sizeof(FTVL data type) for the FTVL used when loading the NDStdArrays.template file.
+# The variable can be set in the environment before running the IOC or it can be set here.
+# It is often convenient to set it in the environment outside the IOC to the largest array any client 
+# or server will need.  For example 10000000 (ten million) bytes may be enough.
+# If it is set here then remember to also set it outside the IOC for any CA clients that need to access the waveform record.  
+# Do not set EPICS_CA_MAX_ARRAY_BYTES to a value much larger than that required, because EPICS Channel Access actually
+# allocates arrays of this size every time it needs a buffer larger than 16K.
+# Uncomment the following line to set it in the IOC.
+epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES", "10000000")
+# Create the serial port
+###drvCamlinkSerialConfigure("SERIAL","COM4");
+###VOXTELConfig("VOXTELIOC", "SERIAL",$(QSIZE), -1,50,100)
+# Create a voxtelDetector driver
+# voxtelConfig(const char *portName, int maxSizeX, int maxSizeY, int dataType,
+#                   int maxBuffers, int maxMemory, int priority, int stackSize)
+voxtelConfig("VOXTELIOC", 192, 384, 3, 0, 0)
+width = 384 height = 192 
+########################
+###dbLoadRecords("$(ADCAMERALINK)/db/coreco.template","P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+###dbLoadRecords("$(ADAPP)/Db/ADBase.template",     "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../../Db/voxtel.template",     "P=Voxtel1:,R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+In master acquire processing loop top 
+In master acquire 0 
+###dbLoadRecords("$(ADAPP)/Db/NDFile.template",      "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+########################
+# Load an NDFile database.  This is not supported for the simDetector which does not write files.
+dbLoadRecords("NDFile.template","P=Voxtel1:,R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+# Create a standard arrays plugin, set it to get data from first simDetector driver.
+NDStdArraysConfigure("Image1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 5)
+# This creates a waveform large enough for 2000x2000x3 (e.g. RGB color) arrays.
+# This waveform only allows transporting 8-bit images
+dbLoadRecords("NDStdArrays.template", "P=Voxtel1:,R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC,TYPE=Int8,FTVL=UCHAR,NELEMENTS=12000000")
+# This waveform only allows transporting 16-bit images
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int16,FTVL=SHORT,NELEMENTS=12000000")
+# This waveform allows transporting 32-bit images
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int32,FTVL=LONG,NELEMENTS=12000000")
+# This waveform allows transporting 64-bit float images
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Float64,FTVL=DOUBLE,NELEMENTS=12000000")
+# This waveform allows transporting 64-bit images, so it can handle any detector data type at the expense of more memory and bandwidth
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image2:,PORT=Image2,ADDR=0,TIMEOUT=1,NDARRAY_PORT=SIM2,TYPE=Float64,FTVL=DOUBLE,NELEMENTS=12000000")
+# Load all other plugins using commonPlugins.cmd
+< C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/iocBoot/commonPlugins.cmd
+# This is an example file for creating plugins
+# It uses the following environment variable macros
+# Many of the parameters defined in this file are also in commonPlugins_settings.req so if autosave is being
+# use the autosave value will replace the value passed to this file.
+# $(PREFIX)      Prefix for all records
+# $(PORT)        The port name for the detector.  In autosave.
+# $(QSIZE)       The queue size for all plugins.  In autosave.
+# $(XSIZE)       The maximum image width; used to set the maximum size for row profiles in the NDPluginStats plugin and 1-D FFT
+#                   profiles in NDPluginFFT.
+# $(YSIZE)       The maximum image height; used to set the maximum size for column profiles in the NDPluginStats plugin
+# $(NCHANS)      The maximum number of time series points in the NDPluginStats, NDPluginROIStats, and NDPluginAttribute plugins
+# $(CBUFFS)      The maximum number of frames buffered in the NDPluginCircularBuff plugin
+# $(MAX_THREADS) The maximum number of threads for plugins which can run in multiple threads. Defaults to 5.
+# Create a netCDF file saving plugin
+NDFileNetCDFConfigure("FileNetCDF1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileNetCDF.template","P=Voxtel1:,R=netCDF1:,PORT=FileNetCDF1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a TIFF file saving plugin
+NDFileTIFFConfigure("FileTIFF1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileTIFF.template",  "P=Voxtel1:,R=TIFF1:,PORT=FileTIFF1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a JPEG file saving plugin
+NDFileJPEGConfigure("FileJPEG1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileJPEG.template",  "P=Voxtel1:,R=JPEG1:,PORT=FileJPEG1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a NeXus file saving plugin
+NDFileNexusConfigure("FileNexus1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileNexus.template", "P=Voxtel1:,R=Nexus1:,PORT=FileNexus1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create an HDF5 file saving plugin
+NDFileHDF5Configure("FileHDF1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileHDF5.template",  "P=Voxtel1:,R=HDF1:,PORT=FileHDF1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a Magick file saving plugin
+NDFileMagickConfigure("FileMagick1", 20, 0, "VOXTELIOC", 0)
+dbLoadRecords("NDFileMagick.template","P=Voxtel1:,R=Magick1:,PORT=FileMagick1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create 4 ROI plugins
+NDROIConfigure("ROI1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDROI.template",       "P=Voxtel1:,R=ROI1:,  PORT=ROI1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+NDROIConfigure("ROI2", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDROI.template",       "P=Voxtel1:,R=ROI2:,  PORT=ROI2,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+NDROIConfigure("ROI3", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDROI.template",       "P=Voxtel1:,R=ROI3:,  PORT=ROI3,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+NDROIConfigure("ROI4", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDROI.template",       "P=Voxtel1:,R=ROI4:,  PORT=ROI4,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create 8 ROIStat plugins
+NDROIStatConfigure("ROISTAT1", 20, 0, "VOXTELIOC", 0, 8, 0, 0, 0, 0, 8)
+dbLoadRecords("NDROIStat.template",   "P=Voxtel1:,R=ROIStat1:  ,PORT=ROISTAT1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:1:,PORT=ROISTAT1,ADDR=0,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:2:,PORT=ROISTAT1,ADDR=1,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:3:,PORT=ROISTAT1,ADDR=2,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:4:,PORT=ROISTAT1,ADDR=3,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:5:,PORT=ROISTAT1,ADDR=4,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:6:,PORT=ROISTAT1,ADDR=5,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:7:,PORT=ROISTAT1,ADDR=6,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDROIStatN.template",  "P=Voxtel1:,R=ROIStat1:8:,PORT=ROISTAT1,ADDR=7,TIMEOUT=1,NCHANS=2048")
+# Create a processing plugin
+NDProcessConfigure("PROC1", 20, 0, "VOXTELIOC", 0, 0, 0)
+dbLoadRecords("NDProcess.template",   "P=Voxtel1:,R=Proc1:,  PORT=PROC1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a scatter plugin
+NDScatterConfigure("SCATTER1", 20, 0, "VOXTELIOC", 0, 0, 0)
+dbLoadRecords("NDScatter.template",   "P=Voxtel1:,R=Scatter1:,  PORT=SCATTER1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a gather plugin with 8 ports
+NDGatherConfigure("GATHER1", 20, 0, 8, 0, 0)
+dbLoadRecords("NDGather.template",   "P=Voxtel1:,R=Gather1:, PORT=GATHER1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=1, PORT=GATHER1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=2, PORT=GATHER1,ADDR=1,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=3, PORT=GATHER1,ADDR=2,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=4, PORT=GATHER1,ADDR=3,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=5, PORT=GATHER1,ADDR=4,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=6, PORT=GATHER1,ADDR=5,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=7, PORT=GATHER1,ADDR=6,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=8, PORT=GATHER1,ADDR=7,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create 5 statistics plugins
+NDStatsConfigure("STATS1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats1:,  PORT=STATS1,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+NDStatsConfigure("STATS2", 20, 0, "ROI1",    0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats2:,  PORT=STATS2,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+NDStatsConfigure("STATS3", 20, 0, "ROI2",    0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats3:,  PORT=STATS3,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+NDStatsConfigure("STATS4", 20, 0, "ROI3",    0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats4:,  PORT=STATS4,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+NDStatsConfigure("STATS5", 20, 0, "ROI4",    0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats5:,  PORT=STATS5,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+# Create a transform plugin
+NDTransformConfigure("TRANS1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDTransform.template", "P=Voxtel1:,R=Trans1:,  PORT=TRANS1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create an overlay plugin with 8 overlays
+NDOverlayConfigure("OVER1", 20, 0, "VOXTELIOC", 0, 8, 0, 0, 0, 0, 8)
+dbLoadRecords("NDOverlay.template", "P=Voxtel1:,R=Over1:, PORT=OVER1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:1:,NAME=ROI1,   SHAPE=1,O=Over1:,XPOS=Voxtel1:ROI1:MinX_RBV,YPOS=Voxtel1:ROI1:MinY_RBV,XSIZE=Voxtel1:ROI1:SizeX_RBV,YSIZE=Voxtel1:ROI1:SizeY_RBV,PORT=OVER1,ADDR=0,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:2:,NAME=ROI2,   SHAPE=1,O=Over1:,XPOS=Voxtel1:ROI2:MinX_RBV,YPOS=Voxtel1:ROI2:MinY_RBV,XSIZE=Voxtel1:ROI2:SizeX_RBV,YSIZE=Voxtel1:ROI2:SizeY_RBV,PORT=OVER1,ADDR=1,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:3:,NAME=ROI3,   SHAPE=1,O=Over1:,XPOS=Voxtel1:ROI3:MinX_RBV,YPOS=Voxtel1:ROI3:MinY_RBV,XSIZE=Voxtel1:ROI3:SizeX_RBV,YSIZE=Voxtel1:ROI3:SizeY_RBV,PORT=OVER1,ADDR=2,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:4:,NAME=ROI4,   SHAPE=1,O=Over1:,XPOS=Voxtel1:ROI4:MinX_RBV,YPOS=Voxtel1:ROI4:MinY_RBV,XSIZE=Voxtel1:ROI4:SizeX_RBV,YSIZE=Voxtel1:ROI4:SizeY_RBV,PORT=OVER1,ADDR=3,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:5:,NAME=Cursor1,SHAPE=1,O=Over1:,XPOS=junk,                  YPOS=junk,                  XSIZE=junk,                   YSIZE=junk,                   PORT=OVER1,ADDR=4,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:6:,NAME=Cursor2,SHAPE=1,O=Over1:,XPOS=junk,                  YPOS=junk,                  XSIZE=junk,                   YSIZE=junk,                   PORT=OVER1,ADDR=5,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:7:,NAME=Box1,   SHAPE=1,O=Over1:,XPOS=junk,                  YPOS=junk,                  XSIZE=junk,                   YSIZE=junk,                   PORT=OVER1,ADDR=6,TIMEOUT=1")
+dbLoadRecords("NDOverlayN.template","P=Voxtel1:,R=Over1:8:,NAME=Box2,   SHAPE=1,O=Over1:,XPOS=junk,                  YPOS=junk,                  XSIZE=junk,                   YSIZE=junk,                   PORT=OVER1,ADDR=7,TIMEOUT=1")
+# Create 2 color conversion plugins
+NDColorConvertConfigure("CC1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDColorConvert.template", "P=Voxtel1:,R=CC1:,  PORT=CC1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+NDColorConvertConfigure("CC2", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
+dbLoadRecords("NDColorConvert.template", "P=Voxtel1:,R=CC2:,  PORT=CC2,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create a circular buffer plugin
+NDCircularBuffConfigure("CB1", 20, 0, "VOXTELIOC", 0, 500, 0)
+dbLoadRecords("NDCircularBuff.template", "P=Voxtel1:,R=CB1:,  PORT=CB1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Create an NDAttribute plugin with 8 attributes
+NDAttrConfigure("ATTR1", 20, 0, "VOXTELIOC", 0, 8, 0, 0, 0)
+dbLoadRecords("NDAttribute.template",  "P=Voxtel1:,R=Attr1:,    PORT=ATTR1,ADDR=0,TIMEOUT=1,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:1:,  PORT=ATTR1,ADDR=0,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:2:,  PORT=ATTR1,ADDR=1,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:3:,  PORT=ATTR1,ADDR=2,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:4:,  PORT=ATTR1,ADDR=3,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:5:,  PORT=ATTR1,ADDR=4,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:6:,  PORT=ATTR1,ADDR=5,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:7:,  PORT=ATTR1,ADDR=6,TIMEOUT=1,NCHANS=2048")
+dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:8:,  PORT=ATTR1,ADDR=7,TIMEOUT=1,NCHANS=2048")
+# Create an FFT plugin
+NDFFTConfigure("FFT1", 3, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 5)
+dbLoadRecords("NDFFT.template", "P=Voxtel1:, R=FFT1:, PORT=FFT1, ADDR=0, TIMEOUT=1, NDARRAY_PORT=VOXTELIOC, NAME=FFT1, NCHANS=192")
+set_requestfile_path("./")
+set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/ADApp/Db")
+set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/iocBoot")
+set_savefile_path("./autosave")
+set_pass0_restoreFile("auto_settings.sav")
+set_pass1_restoreFile("auto_settings.sav")
+save_restoreSet_status_prefix("Voxtel1:")
+dbLoadRecords("C:/epics/synApps_5_8/support/autosave-5-8/asApp/Db/save_restoreStatus.db", "P=Voxtel1:")
+# Optional: load NDPluginPva plugin
+NDPvaConfigure("PVA1", 20, 0, "VOXTELIOC", 0, Voxtel1:Pva1:Image, 0, 0, 0)
+dbLoadRecords("NDPva.template",  "P=Voxtel1:,R=Pva1:, PORT=PVA1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
+# Must start PVA server if this is enabled
+startPVAServer
+VERSION : pvAccess Server v5.0.0
+PROVIDER_NAMES : local
+BEACON_ADDR_LIST : 
+AUTO_BEACON_ADDR_LIST : 1
+BEACON_PERIOD : 15
+BROADCAST_PORT : 5076
+SERVER_PORT : 5075
+RCV_BUFFER_SIZE : 16384
+IGNORE_ADDR_LIST: 
+INTF_ADDR_LIST : 0.0.0.0
+STATE : INITIALIZED
+# Optional: load NDPluginEdge plugin
+#NDEdgeConfigure("EDGE1", $(QSIZE), 0, "$(PORT)", 0, 0, 0, 0)
+#dbLoadRecords("NDEdge.template",  "P=$(PREFIX),R=Edge1:, PORT=EDGE1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT)")
+#set_requestfile_path("$(ADPLUGINEDGE)/edgeApp/Db")
+# Optional: load scan records
+dbLoadRecords("C:/epics/synApps_5_8/support/sscan-2-10-2/sscanApp/Db/scan.db", "P=Voxtel1:,MAXPTS1=2000,MAXPTS2=200,MAXPTS3=20,MAXPTS4=10,MAXPTSH=10")
+set_requestfile_path("C:/epics/synApps_5_8/support/sscan-2-10-2/sscanApp/Db")
+# Optional: load sseq record for acquisition sequence
+dbLoadRecords("C:/epics/synApps_5_8/support/calc-master/calcApp/Db/sseqRecord.db", "P=Voxtel1:, S=AcquireSequence")
+set_requestfile_path("C:/epics/synApps_5_8/support/calc-master/calcApp/Db")
+# Optional: load devIocStats records (requires DEVIOCSTATS module)
+dbLoadRecords("C:/epics/synApps_5_8/support/devIocStats-3-1-15/db/iocAdminSoft.db", "IOC=Voxtel1:")
+# Optional: load alive record (requires ALIVE module)
+dbLoadRecords("C:/epics/synApps_5_8/support/alive-1-0-1/aliveApp/Db/alive.db", "P=Voxtel1:,RHOST=164.54.100.11")
+# Optional: Keenan's Raw file plugin
+NDFileRawConfigure("Raw1", 20, 0, "VOXTELIOC", 0, 0, 0)
+dbLoadRecords("NDFileRaw.template", "P=Voxtel1:, R=raw1:, PORT=Raw1, ADDR=0, TIMEOUT=1, NDARRAY_PORT=VOXTELIOC, NDARRAY_ADDR=0") 
+set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../../voxtelApp/Db")
+#asynSetTraceIOMask("$(PORT)",0,2)
+#asynSetTraceMask("$(PORT)",0,255)
+#asynSetTraceIOMask("FileNetCDF",0,2)
+#asynSetTraceMask("FileNetCDF",0,255)
+#asynSetTraceMask("FileNexus",0,255)
+#asynSetTraceMask("SIM2",0,255)
+iocInit()
+############################################################################
+## EPICS R3.16.1
+## EPICS Base built Oct 24 2017
+############################################################################
+recDynLinkOut: waiting for CA context
+recDynLinkOut: got CA context
+in write32 function 54 value 1 
+in write32 function 55 value 1 
+in write32 function 56 value 1 
+in write32 function 57 value 1 
+in write32 function 58 value 192 
+in write32 function 59 value 384 
+in write32 function 66 value 1 
+in write32 function 68 value 10 
+in write32 function 36 value 0 
+in write32 function 20 value 0 
+in write32 function 31 value 1 
+in write32 function 42 value 1 
+in write32 function 62 value 0 
+in write32 function 63 value 0 
+in write32 function 76 value 0 
+in write32 function 22 value 0 
+in write32 function 25 value 0 
+in write32 function 34 value 0 
+in write32 function 35 value 0 
+in write32 function 9 value 0 
+in write32 function 10 value 0 
+in write32 function 64 value 0 
+in write32 function 65 value 0 
+in write32 function 74 value 0 
+in write32 function 79 value 0 
+in write32 function 24 value 0 
+in write32 function 28 value 0 
+# save things every thirty seconds
+create_monitor_set("auto_settings.req", 30, "P=Voxtel1:,R=cam1:")
+dbl > pvs.txt
+dbpf "Voxtel1:cam1:Voxtel_Initialize","1"
+in write32 function 88 value 1 
+Performing Voxtal Initialize 
+Writing Frame_Stop
+. . . Wrote 5 bytes, Got 7 bytes. l0000 ~l0000  
+. . . Wrote 5 bytes, Got 7 bytes. a0001 ~a0001  
+. . . Wrote 5 bytes, Got 6 bytes. w0000 ~w0000 
+
+Writing Program_ADC
+. . . Wrote 5 bytes, Got 7 bytes. y0000 ~y0000
+ 
+
+Writing Initialize_DACTable
+. . . Wrote 5 bytes, Got 7 bytes. s0200 ~s0200  
+. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
+. . . Wrote 5 bytes, Got 7 bytes. s1200 ~s1200  
+. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
+. . . Wrote 5 bytes, Got 7 bytes. s2200 ~s2200  
+. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
+. . . Wrote 5 bytes, Got 7 bytes. s3200 ~s3200  
+. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
+. . . Wrote 5 bytes, Got 7 bytes. s4200 ~s4200  
+. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
+. . . Wrote 5 bytes, Got 7 bytes. s5200 ~s5200  
+. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
+. . . Wrote 5 bytes, Got 7 bytes. s0E00 ~s0E00  
+. . . Wrote 5 bytes, Got 7 bytes. p411A ~p411A  
+. . . Wrote 5 bytes, Got 7 bytes. s1E00 ~s1E00  
+. . . Wrote 5 bytes, Got 7 bytes. p6CC2 ~p6CC2  
+. . . Wrote 5 bytes, Got 7 bytes. s2E00 ~s2E00  
+. . . Wrote 5 bytes, Got 7 bytes. p6CC2 ~p6CC2  
+. . . Wrote 5 bytes, Got 7 bytes. s3E00 ~s3E00  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s4E00 ~s4E00  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s5E00 ~s5E00  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s6E00 ~s6E00  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s7E00 ~s7E00  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s3600 ~s3600  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s4600 ~s4600  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s5600 ~s5600  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s6600 ~s6600  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s7600 ~s7600  
+. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
+. . . Wrote 5 bytes, Got 7 bytes. s0A00 ~s0A00  
+. . . Wrote 5 bytes, Got 7 bytes. pC1F0 ~pC1F0  
+. . . Wrote 5 bytes, Got 7 bytes. s1A00 ~s1A00  
+. . . Wrote 5 bytes, Got 7 bytes. pC1F0 ~pC1F0  
+. . . Wrote 5 bytes, Got 7 bytes. s2A00 ~s2A00  
+. . . Wrote 5 bytes, Got 7 bytes. p07C1 ~p07C1  
+. . . Wrote 5 bytes, Got 7 bytes. s3A00 ~s3A00  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s4A00 ~s4A00  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s5A00 ~s5A00  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s6A00 ~s6A00  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s7A00 ~s7A00  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s0600 ~s0600  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+. . . Wrote 5 bytes, Got 7 bytes. s1600 ~s1600  
+. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
+
+Writing Program_DAC
+. . . Wrote 5 bytes, Got 7 bytes. sFF00 ~sFF00  
+
+DBF_LONG:           1 = 0x1   
+epics> save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FilePath'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileName'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileNumber'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)AutoIncrement'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileTemplate'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)AutoSave'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileFormat'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileWriteMode'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NumCapture'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)DeleteDriverFile'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)CreateDirectory'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)LazyOpen'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)TempSuffix'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDArrayPort'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDArrayAddress'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)EnableCallbacks'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)MinCallbackTime'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)BlockingCallbacks'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)QueueSize'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NumThreads'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortTime'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortMode'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortSize'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)DataType'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)ColorMode'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)ArrayCallbacks'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDAttributesFile'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDAttributesMacros'
+save_restore: connect failed for channel 'Voxtel1:$(R,recursive)PoolUsedMem.SCAN'
+auto_settings.sav: 2244 of 2273 PV's connected
+epics> epics> 
