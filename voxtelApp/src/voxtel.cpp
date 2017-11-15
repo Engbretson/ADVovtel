@@ -1,5 +1,4 @@
 
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
@@ -34,6 +33,8 @@
 
 #include <epicsExport.h>
 #include "voxtel.h"
+#include "com_functions.h"
+#include "matrox_functions.h"
 
 static const char *driverName = "voxtel";
 
@@ -45,7 +46,6 @@ static const char *driverName = "voxtel";
 
 static void voxtelTaskC(void *drvPvt) {
 	voxtel *pPvt = (voxtel *)drvPvt;
-
 	pPvt->voxtelTask();
 }
 
@@ -62,11 +62,13 @@ void voxtel::voxtelTask()
 	int astatus = asynSuccess;
 	int acquire;
 	int iMode, numImages, numImagesCounter;
-	const char *functionName = "CoaXLinkTask";
+	const char *functionName = "voxtelTask";
 	dims[0] = 0;
 	dims[1] = 0;
 
 	this->lock();
+ //  printf("Initializing voxtelTask() \n");
+
 	// Loop forever
 	while (1) {
 		// Is acquisition active?
@@ -84,7 +86,7 @@ void voxtel::voxtelTask()
 			this->lock();
 		}
 
-//		printf("Starting Acquire \n");
+//		if (printme) printf("Starting Acquire \n");
 
 
 	// start acq
@@ -92,7 +94,8 @@ void voxtel::voxtelTask()
 		getIntegerParam(ADNumImages, &numImages);
 		getIntegerParam(ADNumImagesCounter, &numImagesCounter);
 		getIntegerParam(NDArrayCounter, &imageCounter);
-
+		setIntegerParam(ADStatus, ADStatusInitializing);
+		callParamCallbacks();
 //		imageCounter++;
 //		numImagesCounter++;
 
@@ -113,20 +116,25 @@ void voxtel::voxtelTask()
 			////
 
 			while (1) {
-
+				setIntegerParam(ADStatus, ADStatusAcquire);
+				callParamCallbacks();
 				this->unlock();
 				try
 				{
+//					MbufClear(MilImage, M_WHITE);
+					MbufClear(MilImage, 0);
 					MdigGrab(MilDigitizer, MilImage);
 					MbufGet(MilImage, buffer);
 				}
 				catch (...)
 				{
-					printf("Error in acquire from digitizer\n");
+					if (printme) printf("Error in acquire from digitizer\n");
 				}
 				epicsTimeGetCurrent(&startTime);
 
 				this->lock();
+				setIntegerParam(ADStatus, ADStatusReadout);
+				callParamCallbacks();
 
 				getIntegerParam(NDDataType, (int *)&dataType);
 				getIntegerParam(NDArrayCallbacks, &arrayCallbacks);
@@ -163,11 +171,11 @@ void voxtel::voxtelTask()
 					size = dims[0] * dims[1] * sizeof(uint8_t);
 				}
 
-//				printf("arrayCallbacks %d \n", arrayCallbacks);
-//				printf("dataType %d \n", dataType);
-//				printf("dims 0 X %d \n", dims[0]);
-//				printf("dims 1 y %d \n", dims[1]);
-//				printf("size %d \n", size);
+//				if (printme) printf("arrayCallbacks %d \n", arrayCallbacks);
+//				if (printme) printf("dataType %d \n", dataType);
+//				if (printme) printf("dims 0 X %d \n", dims[0]);
+//				if (printme) printf("dims 1 y %d \n", dims[1]);
+//				if (printme) printf("size %d \n", size);
 
 				//			dataType = NDUInt16;
 				//			dims[0] = 4096;
@@ -186,30 +194,23 @@ void voxtel::voxtelTask()
 
 				}
 
-
 				// Put the frame number and time stamp into the buffer
 				// Set the the start time
 
 				pImage->uniqueId = imageCounter;
 				pImage->timeStamp = startTime.secPastEpoch + startTime.nsec / 1.e9;
 
-//				printf("Before Copy1 \n");
+//				if (printme) printf("Before Copy1 \n");
 				try
 				{
 					memcpy(pImage->pData, buffer, size);
 				}
 				catch (...)
 				{
-					printf("Error copying data from digitizer\n");
+					if (printme) printf("Error copying data from digitizer\n");
 				}
 
-
-				//				pImage->dataType
-				////				printf("Before Copy2 \n");
-				//				memcpy(&pImage->pData+size, ptr2, size);
-				//				memcpy((void *)pImage->pData + size, ptr2, size);
-
-//				printf("After Copy \n");
+//				if (printme) printf("After Copy \n");
 
 				// Get any attributes that have been defined for this driver        
 				this->getAttributes(pImage->pAttributeList);
@@ -248,6 +249,8 @@ void voxtel::voxtelTask()
 		// finish acq
 		setIntegerParam(ADAcquire, 0);
 		callParamCallbacks();
+		setIntegerParam(ADStatus, ADStatusIdle);
+		callParamCallbacks();
 
 	}
 }
@@ -262,10 +265,7 @@ asynStatus voxtel::writeOctet(asynUser* pasynUser, const char *value,
 	int status = asynSuccess;
 	int function = pasynUser->reason;
 
-	printf("I am in the write Octet routine %d %s\n", function, value);
-
-if (function == voxtel_file_template_raw)
-setStringParam(voxtel_file_template_raw, value);
+//	if (printme) printf("I am in the write Octet routine %d %s\n", function, value);
 
 	if (function < FIRST_voxtel_PARAM) {
 		status = ADDriver::writeOctet(pasynUser, value, nChars, nActual);
@@ -288,10 +288,25 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
 	status = setIntegerParam(function, value);
 //	getParamName(function, (const char **)&mesx2);
-//	printf("in write32 function %d value %d \n", function, value);
+ printf("in writeInt32 function %d value %d \n", function, value);
 
 ///	sprintf(mesx, "voxtel::writeInt32, param=%s, value=%d", mesx2, value);
 ///	lf.log(mesx);
+
+// don't do any of these at the moment
+ if (
+	 (function == 54) |
+	 (function == 55) |
+	 (function == 56) |
+	 (function == 57) |
+	 (function == 58) |
+	 (function == 59) |
+	 (function == 62) |
+	 (function == 63) |
+	 (function == 9) |
+	 (function == 10)
+	 ) return (status);
+
 
 /* Ensure that ADStatus is set correctly before we set ADAcquire.*/
 	getIntegerParam(ADStatus, &adstatus);
@@ -315,12 +330,44 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 	}
 	callParamCallbacks();
 
+
 	if (function == voxtel_initialize) {
-		printf("Performing Voxtal Initialize \n");
+
+		printf("Performing Voxtal Initialize All\n");
+		printme = 0;
+
 		Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
 		Do_Write_Read("Program_ADC", m_portHandle, Program_ADC);
 		Do_Write_Read("Initialize_DACTable", m_portHandle, Initialize_DACTable);
 		Do_Write_Read("Program_DAC", m_portHandle, Program_DAC_0);
+		Do_Write_Read("Write_DSI", m_portHandle, Write_DSI);
+		setIntegerParam(voxtel_initialize, 1);
+		setIntegerParam(voxtel_frame_stop, 1);
+
+		Do_Write_Read("Counter_Mode_8", m_portHandle, Counter_Mode_8);
+		Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+		setIntegerParam(voxtel_counter_mode_select, 8);
+
+		Do_Write_Read("Disable_Pattern_Generation", m_portHandle, Disable_Pattern_Generation);
+		setIntegerParam(voxtel_disable_test_pattern_generation, 1);
+
+		Do_Write_Integration_Time(m_portHandle, 100.0);
+		setDoubleParam(voxtel_integration_time, 100.0);
+
+		Do_Write_Threshold1(m_portHandle, 2.5);
+		setDoubleParam(voxtel_threashold_1, 2.5);
+
+		Do_Write_Threshold2(m_portHandle, 2.5);
+		setDoubleParam(voxtel_threashold_2, 2.5);
+
+		setIntegerParam(voxtel_pixel_test_inject_location_col, 255);
+		setIntegerParam(voxtel_pixel_test_inject_location_row, 255);
+
+		callParamCallbacks();
+
+		printme = 1;
+
+		printf("End Of  Voxtal Initialize All\n");
 	}
 	if(function == voxtel_frame_stop) {
 		Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
@@ -337,37 +384,37 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 			break;
 		case 2:
 			Do_Write_Read("Counter_Mode_2", m_portHandle, Counter_Mode_2);
-			setStringParam(voxtel_file_template_raw, "mode2");
+			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
 			break;
 		case 3:
 			Do_Write_Read("Counter_Mode_3", m_portHandle, Counter_Mode_3);
-			setStringParam(voxtel_file_template_raw, "mode3");
+			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
 			break;
 		case 4:
 			break;
 		case 5:
 			Do_Write_Read("Counter_Mode_5", m_portHandle, Counter_Mode_5);
-			setStringParam(voxtel_file_template_raw, "mode5");
+			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
 			break;
 		case 6:
 			break;
 		case 7:
 			Do_Write_Read("Counter_Mode_7", m_portHandle, Counter_Mode_7);
-			setStringParam(voxtel_file_template_raw, "mode7");
+			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
 			break;
 		case 8:
 			Do_Write_Read("Counter_Mode_8", m_portHandle, Counter_Mode_8);
-			setStringParam(voxtel_file_template_raw, "mode8");
+			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
 			break;
 		}
 	}
 
 	if (function == voxtel_pixel_test_inject_location_row) {
-		printf("Pixel test injection row %d\n", value);
+		if (printme) printf("Pixel test injection row %d\n", value);
 	}
 
 	if (function == voxtel_pixel_test_inject_location_col) {
-		printf("Pixel test injection row %d\n", value);
+		if (printme) printf("Pixel test injection col %d\n", value);
 	}
 
 	if (function == voxtel_pixel_test_inject_location) {
@@ -393,8 +440,10 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
 	if ((function == ADAcquire) & (value == 0)) epicsEventSignal(this->stopEventId);
 
-
 /* If this parameter belongs to a base class call its method */
+	
+	callParamCallbacks();
+
 	if (function < FIRST_voxtel_PARAM) 
 		status = ADDriver::writeInt32(pasynUser, value);
 
@@ -415,7 +464,7 @@ asynStatus voxtel::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
 	int function = pasynUser->reason;
 	asynStatus status = asynSuccess;
 
-	status = setDoubleParam(function, value);
+//	status = setDoubleParam(function, value);
 
 ///	char mesx[256];
 ///	char *mesx2;
@@ -425,15 +474,33 @@ asynStatus voxtel::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
 ///	sprintf(mesx, "voxtel::writeFloat64, param=%s, value=%f", mesx2, value);
 ///	lf.log(mesx);
 
+	printf("in writeFloat64 function %d value %f \n", function, value);
+
+	// don't do any of these at the moment
+	if (
+		(function == 53) 
+		) return (status);
+
 if (function == voxtel_integration_time) {
+	value = max(min(1000.0, value), 1.0);
 	Do_Write_Integration_Time(m_portHandle, value);
 	}
+
 if (function == voxtel_threashold_1) {
+		value = max(min(2.5, value), 1.5);
 		Do_Write_Threshold1(m_portHandle, value);
 }
-if(function == voxtel_threashold_2) {
+
+if (function == voxtel_threashold_2) {
+		value = max(min(2.5, value), 1.5);
 		Do_Write_Threshold2(m_portHandle, value);
 }
+
+// in the event that we min/maxed the value, after it after the fact
+
+
+status = setDoubleParam(function, value);
+callParamCallbacks();
 
 /* If this parameter belongs to a base class call its method */
 if (function < FIRST_voxtel_PARAM)
@@ -451,7 +518,7 @@ if (function < FIRST_voxtel_PARAM)
 * \param[in] details If >0 then driver details are printed.
 */
 void voxtel::report(FILE *fp, int details) {
-	fprintf(fp, "VOXTEL detector %s\n", this->portName);
+	 fprintf(fp, "VOXTEL detector %s\n", this->portName);
 	if (details > 0) {
 		int nx, ny;
 		getIntegerParam(ADSizeX, &nx);
@@ -501,19 +568,23 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 	int status;
 	const char *functionName = "voxtelDetector";
 
+//	printf("Starting voxtel::voxtel constructor\n");
+
 	/* Create the epicsEvents for signaling to the acquire task when acquisition starts and stops */
 	startEventId = epicsEventCreate(epicsEventEmpty);
 	if (!startEventId) {
-		printf("%s:%s epicsEventCreate failure for start event\n",
+		if (printme) printf("%s:%s epicsEventCreate failure for start event\n",
 			driverName, functionName);
 		return;
 	}
 	stopEventId = epicsEventCreate(epicsEventEmpty);
 	if (!stopEventId) {
-		printf("%s:%s epicsEventCreate failure for stop event\n",
+		if (printme) printf("%s:%s epicsEventCreate failure for stop event\n",
 			driverName, functionName);
 		return;
 	}
+
+//	printf("after event creations\n");
 
 //	createParam("voxtel_initialize", asynParamOctet, &voxtel_initialize);
 	createParam("voxtel_initialize", asynParamInt32, &voxtel_initialize);
@@ -532,7 +603,14 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 	createParam("voxtel_enable_test_pattern_generation", asynParamInt32, &voxtel_enable_test_pattern_generation);
 	createParam("voxtel_disable_test_pattern_generation", asynParamInt32, &voxtel_disable_test_pattern_generation);
 	createParam("voxtel_print_dactable", asynParamInt32, &voxtel_print_dactable);
-	createParam("voxtel_file_template_raw", asynParamOctet, &voxtel_file_template_raw);
+
+//	printf("After createParams \n");
+
+	
+
+// Skip this, I have to initial EVERYTHING to a known state anyway.
+
+//	printf("Starting voxtel set params \n");
 
 	setIntegerParam(voxtel_initialize, 1);	
 	setIntegerParam(voxtel_counter_mode_select, 8);
@@ -545,6 +623,8 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 
 	setIntegerParam(voxtel_frame_stop, 1);
 	setIntegerParam(voxtel_disable_test_pattern_generation, 1);
+//	printf("Done with voxtel set params \n");
+
 
 	/* Allocate MIL defaults. */
 //	MappAllocDefault(M_DEFAULT, &MilApplication, &MilSystem, &MilDisplay, &MilDigitizer, &MilImage);
@@ -561,15 +641,17 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 		MsysAlloc(M_DEFAULT, M_SYSTEM_DEFAULT, M_DEFAULT, M_DEFAULT, &MilSystem);
 	}
 	catch (...) {
-		printf("MsysAlloc Error \n");
+		 printf("MsysAlloc Error \n");
 	}
 	/* Allocate digitizers using the default DCF. */
 	try
 	{
-		MdigAlloc(MilSystem, M_DEFAULT, MIL_TEXT("M_DEFAULT"), M_DEFAULT, &MilDigitizer);
+//		MdigAlloc(MilSystem, M_DEFAULT, MIL_TEXT("M_DEFAULT"), M_DEFAULT, &MilDigitizer);
+		MdigAlloc(MilSystem, M_DEFAULT, "C:\\epics\\Vx810.dcf", M_DEFAULT, &MilDigitizer);
+
 	}
 	catch (const std::exception &e) {
-		printf("MdigAlloc Error \n");
+		 printf("MdigAlloc Error \n");
 	}
 
 	/* Allocate the grab buffers for each digitizer and clear them. */
@@ -578,15 +660,35 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 		MappControl(M_DEFAULT, M_ERROR, M_PRINT_DISABLE);
 	}
 	catch (const std::exception &e) {
-		printf("MappControl Error \n");
+		 printf("MappControl Error \n");
 	}
 
-//	MdigControl(MilDigitizer, M_GRAB_SCALE, GRAB_SCALE);
+	MdigControl(MilDigitizer, M_GRAB_SCALE, 1);
+
+	do_matrox_diag_1();
+	do_matrox_diag_2();
+
+
 	/*get width & height of cam*/
+
+//	printf("before some MsysInquires\n");
+
 	MIL_INT width = MdigInquire(MilDigitizer, M_SIZE_X, M_NULL);
 	MIL_INT height = MdigInquire(MilDigitizer, M_SIZE_Y, M_NULL);
+	MIL_INT bits = MdigInquire(MilDigitizer, M_SIZE_BIT, M_NULL);
 
-	MbufAlloc2d(MilSystem,width,height,8 + M_UNSIGNED,M_IMAGE + M_DISP + M_PROC + M_GRAB, &MilImage);
+	printf(" X %d Y %d Z %d \n", width, height, bits);
+
+	MbufAlloc2d(MilSystem,width,height,16 + M_UNSIGNED, M_IMAGE + M_PROC + M_GRAB, &MilImage);
+
+	/* Allocate a temporary host buffer */
+//	MbufAlloc2d(MilSystem,
+//		width,
+//		height,
+//		((MdigInquire(MilDigitizer, M_SIZE_BIT, M_NULL) == 8) ? 8 + M_UNSIGNED : 16 + M_UNSIGNED),
+//		M_IMAGE + M_GRAB,
+//		&MilImage);
+
 	MbufClear(MilImage, M_BLACK);
 
 	MIL_INT SerialNumberStringSize = 0;
@@ -600,8 +702,10 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 	setStringParam(ADSerialNumber, (char *)SerialNumberPtr);
 	delete[] SerialNumberPtr;
 
+//	printf("before more sets\n");
+
 	setStringParam(ADFirmwareVersion, "Firmware N/A");
-	setStringParam(voxtel_file_template_raw, "%s%s_%3.3d.rawish");
+//	setStringParam(voxtel_file_template_raw, "%s%s_%3.3d.rawish");
 
 	setIntegerParam(ADSizeY, height);
 	setIntegerParam(ADSizeX, width);
@@ -614,14 +718,16 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 	setIntegerParam(ADMinY, 1);
 	setIntegerParam(ADMaxSizeY, height);
 	setIntegerParam(ADMaxSizeX, width);
+	setIntegerParam(9, 3);
 
 	setIntegerParam(ADStatus, ADStatusIdle);
 	callParamCallbacks();
 
+//	printf("before open com port\n");
+
 	opencomport();
-//	setIntegerParam(open_com, 0);
-	// force baud to fastest rate at startup
-//	setIntegerParam(voxtel_baudrate, 115200);
+
+//	printf("after open com port\n");
 
 
 	/* Create the thread that updates the images */
@@ -631,17 +737,21 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 		(EPICSTHREADFUNC)voxtelTaskC,
 		this) == NULL);
 
+//	printf("after created processing task\n");
+	
 	if (status) {
-		printf("%s:%s epicsThreadCreate failure for image task\n",
+		if (printme) printf("%s:%s epicsThreadCreate failure for image task\n",
 			driverName, functionName);
 		return;
 	}
-
-
+//	printf("Finished create\n");
 }
 
 voxtel::~voxtel(void)
 		{
+  static const char *functionName = "~voxtel";
+	this->lock();
+
 	printf("I am in the voxtel destructor \n");
 
 	Do_Write_Read("Disable_Pattern_Generation", m_portHandle, Disable_Pattern_Generation);
@@ -653,6 +763,8 @@ voxtel::~voxtel(void)
 	MbufFree(MilImage);
 	MsysFree(MilSystem);
 	MappFree(MilApplication);
+
+this->unlock();
 }
 
 /** Configuration command, called directly or from iocsh */
@@ -693,7 +805,6 @@ static void configvoxtelCallFunc(const iocshArgBuf *args)
 
 static void voxtelRegister(void)
 {
-
 	iocshRegister(&configvoxtel, configvoxtelCallFunc);
 }
 
@@ -702,239 +813,6 @@ extern "C" {
 }
 
 
-void voxtel::opencomport(void)
-{
 
-	m_portHandle = CreateFile("COM4",       // Specify port device: default "COM1"
-		GENERIC_READ | GENERIC_WRITE,       // Specify mode that open device.
-		0,                                  // the devide isn't shared.
-		NULL,                               // the object gets a default security.
-		OPEN_EXISTING,                      // Specify which action to take on file. 
-		0,                                  // default.
-		NULL);                              // default.
-
-
-											// Get current configuration of serial communication port.
-	if (GetCommState(m_portHandle, &m_portConfig) == 0)
-	{
-		printf("Get configuration port has problem.\n");
-//		return FALSE;
-	}
-	// Assign user parameter.
-	m_portConfig.BaudRate = CBR_115200;    // Specify buad rate of communicaiton.
-	m_portConfig.StopBits = ONESTOPBIT;    // Specify stopbit of communication.
-	m_portConfig.Parity = NOPARITY;        // Specify parity of communication.
-	m_portConfig.ByteSize = DATABITS_8;    // Specify  byte of size of communication.
-
-
-										   // Set current configuration of serial communication port.
-	if (SetCommState(m_portHandle, &m_portConfig) == 0)
-	{
-		printf("Set configuration port has problem.\n");
-//		return FALSE;
-	}
-
-	// instance an object of COMMTIMEOUTS.
-	COMMTIMEOUTS comTimeOut;
-	comTimeOut.ReadIntervalTimeout = 3;
-	comTimeOut.ReadTotalTimeoutMultiplier = 3;
-	comTimeOut.ReadTotalTimeoutConstant = 2;
-	comTimeOut.WriteTotalTimeoutMultiplier = 3;
-	comTimeOut.WriteTotalTimeoutConstant = 2;
-	SetCommTimeouts(m_portHandle, &comTimeOut);		// set the time-out parameter into device control.
-
-
-//	Do_Read("Perform an inital read to clear all buffers.", m_portHandle, inputData);
-}
-
-void voxtel::closecomport(void)
-{
-
-	if (CloseHandle(m_portHandle) == 0)    // Call this function to close port.
-	{
-		printf("Port Closeing isn't successed.");
-//		return FALSE;
-	}
-
-
-}
-BOOLEAN voxtel::Do_Write_Read(const char *command, HANDLE m_portHandle, const char *outputData)
-{
-	DWORD length1 = 0;
-	DWORD length2 = 0;
-	int packets = 0;
-	div_t divresult;
-
-	divresult = div(int(_tcslen(outputData)), 5);
-
-	packets = divresult.quot;
-
-	printf("Writing %s\n", command);
-
-	for (int i = 0; i < packets; i++)
-	{
-
-		char inputData1[1024] = {};
-		char tempData[1024] = {};
-
-		if (WriteFile(m_portHandle,    // handle to file to write to
-			&outputData[i * 5],               // pointer to data to write to file
-			5, // number of bytes to write
-			&length1, NULL) == 0)       // pointer to number of bytes written
-		{
-			printf(". . . Writing of serial communication has problem.");
-			return FALSE;
-		}
-
-		if (ReadFile(m_portHandle,     // handle of file to read
-			inputData1,                // handle of file to read
-			1024,                       // number of bytes to read
-			&length2,                   // pointer to number of bytes read
-			NULL) == 0)                // pointer to structure for data
-		{
-			printf(". . . Reading of serial communication has problem.\n");
-			return FALSE;
-		}
-
-		if (length2 > 0) {
-			memcpy(tempData, inputData1, length2);
-
-			printf(". . . Wrote %d bytes, Got %d bytes. %.5s %s \n", length1, length2, &outputData[i * 5], tempData);
-
-			//		for (int j = 0; j < length2; j++) printf("%d %d \n", j, inputData1[(i*5)+j]);
-		}
-		//	Sleep(50);
-
-	}
-	printf("\n");
-
-	return TRUE;
-
-}
-
-
-BOOLEAN voxtel::Do_Read(const char *command, HANDLE m_portHandle, char *inputData)
-{
-	DWORD length = 0;
-	char inputData1[1024] = {};
-
-	printf("Reading %s\n", command);
-
-
-	if (ReadFile(m_portHandle,  // handle of file to read
-		inputData1,               // handle of file to read
-		1024,      // number of bytes to read
-		&length,                 // pointer to number of bytes read
-		NULL) == 0)              // pointer to structure for data
-	{
-		printf("Reading of serial communication has problem.\n");
-		return FALSE;
-	}
-
-
-	if (length > 0) {
-		inputData1[length] = NULL; // Assign end flag of message.
-
-		printf(" Got %d bytes. %s\n", length, inputData1);
-
-	}
-	printf("\n");
-	return TRUE;
-}
-BOOLEAN voxtel::Do_Write_Register(const char *command, HANDLE m_portHandle, const char *reg, const char *lower, const char *upper)
-{
-	printf("Performing %s\n", command);
-	Do_Write_Read("Upper_16_Bits_Data", m_portHandle, upper);
-	Do_Write_Read("Register_Address_Location", m_portHandle, reg);
-	Do_Write_Read("Lower_16_Bits_Data", m_portHandle, lower);
-
-	return true;
-
-}
-
-BOOLEAN voxtel::Do_Read_Register(const char *command, HANDLE m_portHandle, const char *reg)
-{
-	Do_Write_Read(command, m_portHandle, reg);
-	return TRUE;
-}
-//void Compute_Integration_Time(int ms, int *lower, int *upper) {
-
-void voxtel::Do_Write_Integration_Time(HANDLE m_portHandle, double ms) {
-	double temp;
-	int lower, upper;
-	char clower[6], cupper[6];
-
-
-	temp = round(ms * 7500.0);
-	lower = int(temp) & 0xffff;
-	upper = (int(temp) & 0xffffffff) >> 16;
-
-	//	printf(" %f %d %d %8.8X %4.4X %4.4X \n", ms, lower, upper, int(temp), lower, upper);
-
-	sprintf_s(clower, 6, "w%4.4X", lower);
-	sprintf_s(cupper, 6, "l%4.4X", upper);
-
-	Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
-	Do_Write_Register("Write_Integration_Time_To_Register_0x0003", m_portHandle, "a0003", clower, cupper);
-	Do_Write_Read("Frame_Start", m_portHandle, Frame_Start);
-
-}
-
-void voxtel::Do_Write_Threshold1(HANDLE m_portHandle, double value) {
-	int temp;
-	int lower;
-	char clower[6];
-
-
-	temp = (unsigned short int)((value * 65535.0) / 3.3 + 0.5);
-	if (temp > 65535)
-		temp = 65535;
-	else if (temp < 0)
-		temp = 0;
-
-	lower = int(temp) & 0xffff;
-
-	sprintf_s(clower, 6, "p%4.4X", lower);
-
-	Do_Write_Register("Write_Threshold1", m_portHandle, clower, "sFF01", "s0A00");
-
-
-
-}
-void voxtel::Do_Write_Threshold2(HANDLE m_portHandle, double value) {
-	int temp;
-	int lower;
-	char clower[6];
-
-
-	temp = (unsigned short int)((value * 65535.0) / 3.3 + 0.5);
-	if (temp > 65535)
-		temp = 65535;
-	else if (temp < 0)
-		temp = 0;
-
-	lower = int(temp) & 0xffff;
-
-	sprintf_s(clower, 6, "p%4.4X", lower);
-
-	Do_Write_Register("Write_Threshold2", m_portHandle, clower, "sFF02", "s1A00");
-
-
-}
-
-void voxtel::Do_Write_Pixel_Test_Inject_Location(HANDLE m_portHandle, int col, int row)
-{
-	char clower[6];
-
-	col = col & 0xFF;
-	row = row & 0xFF;
-
-	sprintf_s(clower, 6, "w%2.2X%2.2X", col, row);
-
-	Do_Write_Register("Pixel_Test_Inject_Location", m_portHandle, "a0020", clower, "lFF00");
-
-	Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
-
-}
 
 

@@ -5,9 +5,6 @@
 
 #include <epicsEvent.h>
 #include <epicsTypes.h>
-///#include "ADCameralink.h"
-///#include "cl_com_port2.h"
-///#include "stopWatch.h"
 #include "ADDriver.h"
 #include <mil.h>
 
@@ -50,13 +47,9 @@ const char *Initialize_DACTable = "s0200p828E" "s1200p828E" "s2200p0A34" "s3200p
 "s1A00pC1F0" "s2A00p07C1" "s3A00p0000" "s4A00p0000" "s5A00p0000"
 "s6A00p0000" "s7A00p0000" "s0600p0000" "s1600p0000";
 
-
-
-//class epicsShareClass voxtel : public ADCameralink {
 class epicsShareClass voxtel : public ADDriver {
 public:
-///	voxtel(const char *portName, const char *voxtelPort, int maxBuffers,
-///		size_t maxMemory, int priority, int stackSize);
+
 	voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t dataType,
 		int maxBuffers, size_t maxMemory, int priority, int stackSize);
 	~voxtel(void);
@@ -85,6 +78,8 @@ public:
 	void Do_Write_Threshold1(HANDLE m_portHandle, double value);
 	void Do_Write_Threshold2(HANDLE m_portHandle, double value);
 	void Do_Write_Pixel_Test_Inject_Location(HANDLE m_portHandle, int col, int row);
+	void do_matrox_diag_1();
+	void do_matrox_diag_2();
 
 protected:
 
@@ -102,30 +97,22 @@ protected:
 	int voxtel_enable_test_pattern_generation;
 	int voxtel_disable_test_pattern_generation;
 	int voxtel_print_dactable;
-	int voxtel_file_template_raw;
-#define LAST_voxtel_PARAM voxtel_file_template_raw
-
-#ifndef USEASYNSERIAL
-///	comportInterface *serial_port;
-//	sw_com_port serial_port;
-#endif
-// asyn user for the serial port
-///	asynUser *pasynUserSerial;
+#define LAST_voxtel_PARAM voxtel_print_dactable
 
 
 	NDArray	*pImage;
 
 	// interface to serial port octet
-	asynInterface *paynOctet;
-	asynInterface *paynOption;
-	char myServerPort[255];
+//	asynInterface *paynOctet;
+//	asynInterface *paynOption;
+//	char myServerPort[255];
 // local com ports
 
 	HANDLE m_portHandle;
 	DCB m_portConfig;
 	char inputData[1024] = {};
 	unsigned int buffer[192][384] = { 0 };
-
+	int printme = 1;
 
 // MIL related 
 

@@ -45,6 +45,7 @@ asynSetMinTimerPeriod(0.001)
 # Do not set EPICS_CA_MAX_ARRAY_BYTES to a value much larger than that required, because EPICS Channel Access actually
 # allocates arrays of this size every time it needs a buffer larger than 16K.
 # Uncomment the following line to set it in the IOC.
+
 epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES", "10000000")
 
 # Create the serial port
@@ -55,15 +56,13 @@ epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES", "10000000")
 # Create a voxtelDetector driver
 # voxtelConfig(const char *portName, int maxSizeX, int maxSizeY, int dataType,
 #                   int maxBuffers, int maxMemory, int priority, int stackSize)
-voxtelConfig("$(PORT)", $(XSIZE), $(YSIZE), 3, 0, 0)
+# dataType Initial data type of the detector data. These are the enum values for NDDataType_t, 
+# 0=NDInt8 1=NDUInt8 2=NDInt16 3=NDUInt16 4=NDInt32 5=NDUInt32 6=NDFloat32 7=NDFloat64
 
-########################
+voxtelConfig("$(PORT)", $(XSIZE), $(YSIZE), 3, 0, 0, 0, 0)
 
-###dbLoadRecords("$(ADCAMERALINK)/db/coreco.template","P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
-###dbLoadRecords("$(ADAPP)/Db/ADBase.template",     "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
 dbLoadRecords("$(ADVOXTEL)/Db/voxtel.template",     "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
-###dbLoadRecords("$(ADAPP)/Db/NDFile.template",      "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
-
+set_requestfile_path("$(ADVOXTEL)/voxtelApp/Db")
 
 ########################
 
@@ -75,9 +74,9 @@ NDStdArraysConfigure("Image1", 20, 0, "$(PORT)", 0, 0, 0, 0, 0, 5)
 
 # This creates a waveform large enough for 2000x2000x3 (e.g. RGB color) arrays.
 # This waveform only allows transporting 8-bit images
-dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int8,FTVL=UCHAR,NELEMENTS=12000000")
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int8,FTVL=UCHAR,NELEMENTS=12000000")
 # This waveform only allows transporting 16-bit images
-#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int16,FTVL=SHORT,NELEMENTS=12000000")
+dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int16,FTVL=SHORT,NELEMENTS=12000000")
 # This waveform allows transporting 32-bit images
 #dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int32,FTVL=LONG,NELEMENTS=12000000")
 # This waveform allows transporting 64-bit float images
@@ -87,8 +86,9 @@ dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,
 
 
 # Load all other plugins using commonPlugins.cmd
+
 < $(ADCORE)/iocBoot/commonPlugins.cmd
-set_requestfile_path("$(ADVOXTEL)/voxtelApp/Db")
+
 
 #asynSetTraceIOMask("$(PORT)",0,2)
 #asynSetTraceMask("$(PORT)",0,255)
@@ -106,7 +106,7 @@ create_monitor_set("auto_settings.req", 30, "P=$(PREFIX),R=cam1:")
 dbl > pvs.txt
 
 dbpf "$(PREFIX)cam1:Voxtel_Initialize","1"
-dbpf "$(PREFIX)cam1:Voxtel_Disable_TestPattern","1"
+
 
 
 

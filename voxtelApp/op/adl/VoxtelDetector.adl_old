@@ -8,7 +8,7 @@ display {
 		x=144
 		y=119
 		width=829
-		height=928
+		height=969
 	}
 	clr=14
 	bclr=4
@@ -139,7 +139,7 @@ composite {
 		height=350
 	}
 	"composite name"=""
-	"composite file"="Voxtel_control_Small.adl"
+	"composite file"="Voxtel_control.adl"
 }
 composite {
 	object {
@@ -756,4 +756,14 @@ composite {
 	}
 	limits {
 	}
+}
+composite {
+	object {
+		x=5
+		y=851
+		width=350
+		height=110
+	}
+	"composite name"=""
+	"composite file"="ADAttrFile.adl"
 }

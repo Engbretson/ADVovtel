@@ -1,16 +1,18 @@
 
-C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>set EPICS_CA_MAX_ARRAY_BYTES=10000000 
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>set EPICS_CA_MAX_ARRAY_BYTES=10000000 
 
-C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>set EPICS_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\adl;C:\epics\synApps_5_8\support\areaDetector-R3-1\ADCore\ADApp\op\adl 
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>set EPICS_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\adl;C:\epics\synApps_5_8\support\areaDetector-R3-1\ADCore\ADApp\op\adl 
 
-C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>start medm -x -macro "P=Voxtel1:, R=cam1:" Voxtel_Control.adl  
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>set CAQTDM_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\ui;C:\epics\synApps_5_8\support\areaDetector-R3-1\ADCore\ADApp\op\ui\autoconvert 
 
-C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>start medm -x -macro "P=Voxtel1:, R=cam1:" VoxtelDetector.adl  
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>start medm -x -macro "P=Voxtel1:, R=cam1:" VoxtelDetector.adl  
 
-C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVOXTEL>..\..\bin\windows-x64-static\voxtelApp.exe st.cmd 
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>start caqtdm -x -macro "P=Voxtel1:, R=cam1:" ad_cam_image.ui 
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>..\..\bin\windows-x64-static\voxtelApp.exe st.cmd 
 # Must have loaded envPaths via st.cmd.linux or st.cmd.win32
 < envPaths
-epicsEnvSet("IOC","iocVOXTEL")
+epicsEnvSet("IOC","iocVoxtel")
 epicsEnvSet("TOP","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC")
 epicsEnvSet("ADVOXTEL","C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../..")
 epicsEnvSet("SUPPORT","C:/epics/synApps_5_8/support")
@@ -42,9 +44,9 @@ voxtelApp_registerRecordDeviceDriver(pdbbase)
 # The queue size for all plugins
 epicsEnvSet("QSIZE",  "20")
 # The maximum image width; used to set the maximum size for this driver and for row profiles in the NDPluginStats plugin
-epicsEnvSet("XSIZE",  "192")
+epicsEnvSet("YSIZE",  "192")
 # The maximum image height; used to set the maximum size for this driver and for column profiles in the NDPluginStats plugin
-epicsEnvSet("YSIZE",  "384")
+epicsEnvSet("XSIZE",  "384")
 # The maximum number of time series points in the NDPluginStats plugin
 epicsEnvSet("NCHANS", "2048")
 # The maximum number of frames buffered in the NDPluginCircularBuff plugin
@@ -77,15 +79,15 @@ epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES", "10000000")
 # Create a voxtelDetector driver
 # voxtelConfig(const char *portName, int maxSizeX, int maxSizeY, int dataType,
 #                   int maxBuffers, int maxMemory, int priority, int stackSize)
-voxtelConfig("VOXTELIOC", 192, 384, 3, 0, 0)
-width = 384 height = 192 
-########################
-###dbLoadRecords("$(ADCAMERALINK)/db/coreco.template","P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
-###dbLoadRecords("$(ADAPP)/Db/ADBase.template",     "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+# dataType Initial data type of the detector data. These are the enum values for NDDataType_t, 
+# 0=NDInt8 1=NDUInt8 2=NDInt16 3=NDUInt16 4=NDInt32 5=NDUInt32 6=NDFloat32 7=NDFloat64
+voxtelConfig("VOXTELIOC", 384, 192, 0, 0, 0)
+Camera Present 1 
+Frame Count 0 Frame Missed 0 Frame Rate 0
+Pending Grab Number 0 Total Buffer Num 0
+Size Bit 8 
 dbLoadRecords("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../../Db/voxtel.template",     "P=Voxtel1:,R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
-In master acquire processing loop top 
-In master acquire 0 
-###dbLoadRecords("$(ADAPP)/Db/NDFile.template",      "P=$(PREFIX),R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
+set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../../voxtelApp/Db")
 ########################
 # Load an NDFile database.  This is not supported for the simDetector which does not write files.
 dbLoadRecords("NDFile.template","P=Voxtel1:,R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOUT=1")
@@ -93,9 +95,9 @@ dbLoadRecords("NDFile.template","P=Voxtel1:,R=cam1:,PORT=VOXTELIOC,ADDR=0,TIMEOU
 NDStdArraysConfigure("Image1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 5)
 # This creates a waveform large enough for 2000x2000x3 (e.g. RGB color) arrays.
 # This waveform only allows transporting 8-bit images
-dbLoadRecords("NDStdArrays.template", "P=Voxtel1:,R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC,TYPE=Int8,FTVL=UCHAR,NELEMENTS=12000000")
+#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int8,FTVL=UCHAR,NELEMENTS=12000000")
 # This waveform only allows transporting 16-bit images
-#dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int16,FTVL=SHORT,NELEMENTS=12000000")
+dbLoadRecords("NDStdArrays.template", "P=Voxtel1:,R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC,TYPE=Int16,FTVL=SHORT,NELEMENTS=12000000")
 # This waveform allows transporting 32-bit images
 #dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=$(PORT),TYPE=Int32,FTVL=LONG,NELEMENTS=12000000")
 # This waveform allows transporting 64-bit float images
@@ -174,15 +176,15 @@ dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=7, PORT=GATHER1,
 dbLoadRecords("NDGatherN.template",   "P=Voxtel1:,R=Gather1:, N=8, PORT=GATHER1,ADDR=7,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
 # Create 5 statistics plugins
 NDStatsConfigure("STATS1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
-dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats1:,  PORT=STATS1,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats1:,  PORT=STATS1,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=384,YSIZE=192,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
 NDStatsConfigure("STATS2", 20, 0, "ROI1",    0, 0, 0, 0, 0, 8)
-dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats2:,  PORT=STATS2,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats2:,  PORT=STATS2,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=384,YSIZE=192,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
 NDStatsConfigure("STATS3", 20, 0, "ROI2",    0, 0, 0, 0, 0, 8)
-dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats3:,  PORT=STATS3,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats3:,  PORT=STATS3,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=384,YSIZE=192,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
 NDStatsConfigure("STATS4", 20, 0, "ROI3",    0, 0, 0, 0, 0, 8)
-dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats4:,  PORT=STATS4,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats4:,  PORT=STATS4,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=384,YSIZE=192,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
 NDStatsConfigure("STATS5", 20, 0, "ROI4",    0, 0, 0, 0, 0, 8)
-dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats5:,  PORT=STATS5,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=192,YSIZE=384,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
+dbLoadRecords("NDStats.template",     "P=Voxtel1:,R=Stats5:,  PORT=STATS5,ADDR=0,TIMEOUT=1,HIST_SIZE=256,XSIZE=384,YSIZE=192,NCHANS=2048,NDARRAY_PORT=VOXTELIOC")
 # Create a transform plugin
 NDTransformConfigure("TRANS1", 20, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 8)
 dbLoadRecords("NDTransform.template", "P=Voxtel1:,R=Trans1:,  PORT=TRANS1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=VOXTELIOC")
@@ -218,7 +220,7 @@ dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:7:,  PORT=ATTR1,ADDR=
 dbLoadRecords("NDAttributeN.template", "P=Voxtel1:,R=Attr1:8:,  PORT=ATTR1,ADDR=7,TIMEOUT=1,NCHANS=2048")
 # Create an FFT plugin
 NDFFTConfigure("FFT1", 3, 0, "VOXTELIOC", 0, 0, 0, 0, 0, 5)
-dbLoadRecords("NDFFT.template", "P=Voxtel1:, R=FFT1:, PORT=FFT1, ADDR=0, TIMEOUT=1, NDARRAY_PORT=VOXTELIOC, NAME=FFT1, NCHANS=192")
+dbLoadRecords("NDFFT.template", "P=Voxtel1:, R=FFT1:, PORT=FFT1, ADDR=0, TIMEOUT=1, NDARRAY_PORT=VOXTELIOC, NAME=FFT1, NCHANS=384")
 set_requestfile_path("./")
 set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/ADApp/Db")
 set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADCore/iocBoot")
@@ -260,7 +262,6 @@ dbLoadRecords("C:/epics/synApps_5_8/support/alive-1-0-1/aliveApp/Db/alive.db", "
 # Optional: Keenan's Raw file plugin
 NDFileRawConfigure("Raw1", 20, 0, "VOXTELIOC", 0, 0, 0)
 dbLoadRecords("NDFileRaw.template", "P=Voxtel1:, R=raw1:, PORT=Raw1, ADDR=0, TIMEOUT=1, NDARRAY_PORT=VOXTELIOC, NDARRAY_ADDR=0") 
-set_requestfile_path("C:/epics/synApps_5_8/support/areaDetector-R3-1/ADVoxtel/iocs/voxtelIOC/../../voxtelApp/Db")
 #asynSetTraceIOMask("$(PORT)",0,2)
 #asynSetTraceMask("$(PORT)",0,255)
 #asynSetTraceIOMask("FileNetCDF",0,2)
@@ -274,17 +275,6 @@ iocInit()
 ############################################################################
 recDynLinkOut: waiting for CA context
 recDynLinkOut: got CA context
-in write32 function 54 value 1 
-in write32 function 55 value 1 
-in write32 function 56 value 1 
-in write32 function 57 value 1 
-in write32 function 58 value 192 
-in write32 function 59 value 384 
-in write32 function 66 value 1 
-in write32 function 68 value 10 
-in write32 function 36 value 0 
-in write32 function 20 value 0 
-in write32 function 31 value 1 
 in write32 function 42 value 1 
 in write32 function 62 value 0 
 in write32 function 63 value 0 
@@ -293,7 +283,7 @@ in write32 function 22 value 0
 in write32 function 25 value 0 
 in write32 function 34 value 0 
 in write32 function 35 value 0 
-in write32 function 9 value 0 
+in write32 function 9 value 1 
 in write32 function 10 value 0 
 in write32 function 64 value 0 
 in write32 function 65 value 0 
@@ -301,113 +291,39 @@ in write32 function 74 value 0
 in write32 function 79 value 0 
 in write32 function 24 value 0 
 in write32 function 28 value 0 
+I am in the write Octet routine 37 
+in write32 function 54 value 1 
+in write32 function 55 value 1 
+in write32 function 56 value 1 
+in write32 function 57 value 1 
+in write32 function 58 value 384 
+in write32 function 59 value 192 
+in write32 function 66 value 1 
+in write32 function 68 value 10 
+in write32 function 36 value 0 
+in write32 function 20 value 0 
+in write32 function 31 value 1 
+I am in the write Octet routine 40 
+I am in the write Octet routine 38 
+I am in the write Octet routine 17 
+I am in the write Octet routine 19 
+I am in the write Octet routine 21 
 # save things every thirty seconds
 create_monitor_set("auto_settings.req", 30, "P=Voxtel1:,R=cam1:")
 dbl > pvs.txt
 dbpf "Voxtel1:cam1:Voxtel_Initialize","1"
 in write32 function 88 value 1 
-Performing Voxtal Initialize 
-Writing Frame_Stop
-. . . Wrote 5 bytes, Got 7 bytes. l0000 ~l0000  
-. . . Wrote 5 bytes, Got 7 bytes. a0001 ~a0001  
-. . . Wrote 5 bytes, Got 6 bytes. w0000 ~w0000 
-
-Writing Program_ADC
-. . . Wrote 5 bytes, Got 7 bytes. y0000 ~y0000
- 
-
-Writing Initialize_DACTable
-. . . Wrote 5 bytes, Got 7 bytes. s0200 ~s0200  
-. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
-. . . Wrote 5 bytes, Got 7 bytes. s1200 ~s1200  
-. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
-. . . Wrote 5 bytes, Got 7 bytes. s2200 ~s2200  
-. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
-. . . Wrote 5 bytes, Got 7 bytes. s3200 ~s3200  
-. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
-. . . Wrote 5 bytes, Got 7 bytes. s4200 ~s4200  
-. . . Wrote 5 bytes, Got 7 bytes. p0A34 ~p0A34  
-. . . Wrote 5 bytes, Got 7 bytes. s5200 ~s5200  
-. . . Wrote 5 bytes, Got 7 bytes. p828E ~p828E  
-. . . Wrote 5 bytes, Got 7 bytes. s0E00 ~s0E00  
-. . . Wrote 5 bytes, Got 7 bytes. p411A ~p411A  
-. . . Wrote 5 bytes, Got 7 bytes. s1E00 ~s1E00  
-. . . Wrote 5 bytes, Got 7 bytes. p6CC2 ~p6CC2  
-. . . Wrote 5 bytes, Got 7 bytes. s2E00 ~s2E00  
-. . . Wrote 5 bytes, Got 7 bytes. p6CC2 ~p6CC2  
-. . . Wrote 5 bytes, Got 7 bytes. s3E00 ~s3E00  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s4E00 ~s4E00  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s5E00 ~s5E00  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s6E00 ~s6E00  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s7E00 ~s7E00  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s3600 ~s3600  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s4600 ~s4600  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s5600 ~s5600  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s6600 ~s6600  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s7600 ~s7600  
-. . . Wrote 5 bytes, Got 7 bytes. p4D93 ~p4D93  
-. . . Wrote 5 bytes, Got 7 bytes. s0A00 ~s0A00  
-. . . Wrote 5 bytes, Got 7 bytes. pC1F0 ~pC1F0  
-. . . Wrote 5 bytes, Got 7 bytes. s1A00 ~s1A00  
-. . . Wrote 5 bytes, Got 7 bytes. pC1F0 ~pC1F0  
-. . . Wrote 5 bytes, Got 7 bytes. s2A00 ~s2A00  
-. . . Wrote 5 bytes, Got 7 bytes. p07C1 ~p07C1  
-. . . Wrote 5 bytes, Got 7 bytes. s3A00 ~s3A00  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s4A00 ~s4A00  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s5A00 ~s5A00  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s6A00 ~s6A00  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s7A00 ~s7A00  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s0600 ~s0600  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-. . . Wrote 5 bytes, Got 7 bytes. s1600 ~s1600  
-. . . Wrote 5 bytes, Got 7 bytes. p0000 ~p0000  
-
-Writing Program_DAC
-. . . Wrote 5 bytes, Got 7 bytes. sFF00 ~sFF00  
-
+Performing Voxtal Initialize All
+End Of  Voxtal Initialize All
 DBF_LONG:           1 = 0x1   
-epics> save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FilePath'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileName'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileNumber'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)AutoIncrement'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileTemplate'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)AutoSave'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileFormat'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)FileWriteMode'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NumCapture'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)DeleteDriverFile'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)CreateDirectory'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)LazyOpen'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)TempSuffix'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDArrayPort'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDArrayAddress'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)EnableCallbacks'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)MinCallbackTime'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)BlockingCallbacks'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)QueueSize'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NumThreads'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortTime'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortMode'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)SortSize'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)DataType'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)ColorMode'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)ArrayCallbacks'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDAttributesFile'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)NDAttributesMacros'
-save_restore: connect failed for channel 'Voxtel1:$(R,recursive)PoolUsedMem.SCAN'
-auto_settings.sav: 2244 of 2273 PV's connected
-epics> epics> 
+epics> auto_settings.sav: 2255 of 2255 PV's connected
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>rem CleanUp_Voxtel 
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>rem CleanUP_Maxtor 
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>taskkill /IM caqtdm.exe /F 
+SUCCESS: The process "caQtDM.exe" with PID 27548 has been terminated.
+
+C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\iocs\voxtelIOC\iocBoot\iocVoxtel>taskkill /IM medm.exe /F 
+SUCCESS: The process "medm.exe" with PID 35924 has been terminated.

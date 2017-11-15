@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- Attributes -->
+<Attributes
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../../ADCore/XML_schema/NDAttributes.xsd"
+    >
+   <Attribute name="Voxtel_Mode"              type="EPICS_PV" source="$(P)$(R)Counter_Mode_Select_RBV"  dbrtype="DBR_NATIVE"  description="Voxtel Mode"/>
+   <Attribute name="Voxtel_IntegrationTime"   type="EPICS_PV" source="$(P)$(R)Integration_Time_RBV"     dbrtype="DBR_NATIVE"  description="Voxtel Integration Time"/>
+   <Attribute name="Voxtel_Threshhold1"       type="EPICS_PV" source="$(P)$(R)Threashold_1_RBV"         dbrtype="DBR_NATIVE"  description="Voxtel Threashold 1"/>
+   <Attribute name="Voxtel_Threashold2"       type="EPICS_PV" source="$(P)$(R)Threashold_2_RBV"         dbrtype="DBR_NATIVE"  description="Voxtel Threashold 2"/>
+   <Attribute name="ImageCounter"             type="EPICS_PV" source="$(P)$(R)ARRAY_COUNTER_RBV"            dbrtype="DBR_NATIVE"  description="Image counter"/>
+   <Attribute name="MaxSizeX"                 type="EPICS_PV" source="$(P)$(R)MAX_SIZE_X_RBV"               dbrtype="DBR_NATIVE"  description="Detector X Max size"/>
+   <Attribute name="MaxSizeY"                 type="EPICS_PV" source="$(P)$(R)MAX_SIZE_Y_RBV"               dbrtype="DBR_NATIVE"  description="Detector Y Max size"/>
+   <Attribute name="SizeX"                    type="EPICS_PV" source="$(P)$(R)SIZE_X_RBV"                   dbrtype="DBR_NATIVE"  description="Detector X size"/>
+   <Attribute name="SizeY"                    type="EPICS_PV" source="$(P)$(R)SIZE_Y_RBV"                   dbrtype="DBR_NATIVE"  description="Detector Y size"/>
+   <Attribute name="CameraModel"              type="EPICS_PV" source="$(P)$(R)MODEL_RBV"                    dbrtype="DBR_NATIVE"  description="Camera model"/>
+   <Attribute name="CameraManufacturer"       type="EPICS_PV" source="$(P)$(R)Manufacturer_RBV"             dbrtype="DBR_NATIVE"  description="Camera manufacturer"/>
+   <Attribute name="SerialNumber"             type="EPICS_PV" source="$(P)$(R)SERIAL_NUMBER_RBV"            dbrtype="DBR_NATIVE"  description="Camera serial number"/>
+   <Attribute name="AttributesFilePARAM"      type="EPICS_PV" source="$(P)$(R)ND_ATTRIBUTES_FILE_RBV"       dbrtype="DBR_NATIVE"  description="Attributes file EPICS_PV"/>
+   <Attribute name="NImagesCounter"           type="EPICS_PV" source="$(P)$(R)NIMAGES_COUNTER_RBV"          dbrtype="DBR_NATIVE"  description="Number of images counter"/>
+</Attributes>
+    
+    
