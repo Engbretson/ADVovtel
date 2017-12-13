@@ -1,0 +1,38 @@
+# autosave R5.3	Automatically generated - DO NOT MODIFY - 171213-110752
+Voxtel1:cam1:BinX 1
+Voxtel1:cam1:BinY 1
+Voxtel1:cam1:MinX 1
+Voxtel1:cam1:MinY 1
+Voxtel1:cam1:SizeX 384
+Voxtel1:cam1:SizeY 192
+Voxtel1:cam1:ReverseX 0
+Voxtel1:cam1:ReverseY 0
+Voxtel1:cam1:AcquireTime 1
+Voxtel1:cam1:AcquirePeriod 0
+Voxtel1:cam1:Gain 1
+Voxtel1:cam1:FrameType 0
+Voxtel1:cam1:ImageMode 0
+Voxtel1:cam1:TriggerMode 0
+Voxtel1:cam1:NumExposures 1
+Voxtel1:cam1:NumImages 1000
+Voxtel1:cam1:ShutterMode 0
+Voxtel1:cam1:ShutterOpenDelay 0
+Voxtel1:cam1:ShutterCloseDelay 0
+Voxtel1:cam1:ShutterOpenEPICS.OUT 
+Voxtel1:cam1:ShutterCloseEPICS.OUT 
+Voxtel1:cam1:ShutterOpenEPICS.OCAL 1
+Voxtel1:cam1:ShutterCloseEPICS.OCAL 0
+Voxtel1:cam1:ShutterStatusEPICS_RBV.INP test CP MS
+Voxtel1:cam1:ShutterStatusEPICS_RBV.ZRVL 0
+Voxtel1:cam1:ShutterStatusEPICS_RBV.ONVL 1
+Voxtel1:cam1:Temperature 25
+Voxtel1:cam1:ReadStatus.SCAN 0
+Voxtel1:cam1:DataType 3
+Voxtel1:cam1:ColorMode 0
+Voxtel1:cam1:ArrayCallbacks 1
+Voxtel1:cam1:NDAttributesFile 0
+Voxtel1:cam1:NDAttributesMacros 0
+Voxtel1:cam1:PoolUsedMem.SCAN 6
+Voxtel1:cam1:Pixel_Inject_Row 255
+Voxtel1:cam1:Pixel_Inject_Col 255
+<END>

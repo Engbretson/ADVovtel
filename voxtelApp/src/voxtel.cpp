@@ -44,6 +44,55 @@ static const char *driverName = "voxtel";
 */
 
 
+void voxtel::do_Initialize()
+{
+	printf("Performing Voxtal Initialize To Defaults\n");
+
+//	printme = 0;
+
+//	Do_Write_Read("Disable_Pattern_Generation", m_portHandle, Disable_Pattern_Generation);
+//	setIntegerParam(voxtel_disable_test_pattern_generation, 1);
+//	callParamCallbacks();
+
+	Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
+	Do_Write_Read("Program_ADC", m_portHandle, Program_ADC);
+	Do_Write_Read("Initialize_DACTable", m_portHandle, Initialize_DACTable);
+	Do_Write_Read("Program_DAC", m_portHandle, Program_DAC_0);
+	Do_Write_Read("Write_DSI__1", m_portHandle, Write_DSI__1);
+	Do_Write_Read("Counter_Mode_8", m_portHandle, Counter_Mode_8);
+	Do_Write_Read("Write_DSI__2", m_portHandle, Write_DSI__2);
+	Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
+
+	setIntegerParam(voxtel_initialize, 1);
+	setIntegerParam(voxtel_frame_stop, 1);
+	setIntegerParam(voxtel_counter_mode_select, 8);
+	callParamCallbacks();
+
+
+	Do_Write_Integration_Time(m_portHandle, 100.0);
+	setDoubleParam(voxtel_integration_time, 100.0);
+//	Do_Write_Integration_Time(m_portHandle, 4.0);
+//	setDoubleParam(voxtel_integration_time, 4.0);
+
+	callParamCallbacks();
+
+	Do_Write_Threshold1(m_portHandle, 2.5);
+	setDoubleParam(voxtel_threashold_1, 2.5);
+	callParamCallbacks();
+
+	Do_Write_Threshold2(m_portHandle, 2.5);
+	setDoubleParam(voxtel_threashold_2, 2.5);
+	callParamCallbacks();
+
+	setIntegerParam(voxtel_pixel_test_inject_location_col, 255);
+	setIntegerParam(voxtel_pixel_test_inject_location_row, 255);
+	callParamCallbacks();
+
+//	printme = 1;
+
+	printf("End Of  Voxtal Initialize All\n");
+}
+
 static void voxtelTaskC(void *drvPvt) {
 	voxtel *pPvt = (voxtel *)drvPvt;
 	pPvt->voxtelTask();
@@ -121,10 +170,18 @@ void voxtel::voxtelTask()
 				this->unlock();
 				try
 				{
+	try
+	{
 //					MbufClear(MilImage, M_WHITE);
 					MbufClear(MilImage, 0);
 					MdigGrab(MilDigitizer, MilImage);
 					MbufGet(MilImage, buffer);
+
+	}
+	catch (...) {
+		 printf("Acquire Error of some sort\n");
+	}
+
 				}
 				catch (...)
 				{
@@ -184,7 +241,6 @@ void voxtel::voxtelTask()
 
 				this->pImage = this->pNDArrayPool->alloc(2, dims, dataType, 0, NULL);
 				//							this->pImage = this->pNDArrayPool->alloc(2, dims, dataType, 2, NULL);
-
 
 				if (!this->pImage) {
 					asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
@@ -294,6 +350,7 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 ///	lf.log(mesx);
 
 // don't do any of these at the moment
+/*
  if (
 	 (function == 54) |
 	 (function == 55) |
@@ -306,7 +363,7 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 	 (function == 9) |
 	 (function == 10)
 	 ) return (status);
-
+*/
 
 /* Ensure that ADStatus is set correctly before we set ADAcquire.*/
 	getIntegerParam(ADStatus, &adstatus);
@@ -332,51 +389,19 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
 
 	if (function == voxtel_initialize) {
-
-		printf("Performing Voxtal Initialize All\n");
-		printme = 0;
-
-		Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
-		Do_Write_Read("Program_ADC", m_portHandle, Program_ADC);
-		Do_Write_Read("Initialize_DACTable", m_portHandle, Initialize_DACTable);
-		Do_Write_Read("Program_DAC", m_portHandle, Program_DAC_0);
-		Do_Write_Read("Write_DSI", m_portHandle, Write_DSI);
-		setIntegerParam(voxtel_initialize, 1);
-		setIntegerParam(voxtel_frame_stop, 1);
-
-		Do_Write_Read("Counter_Mode_8", m_portHandle, Counter_Mode_8);
-		Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
-		setIntegerParam(voxtel_counter_mode_select, 8);
-
-		Do_Write_Read("Disable_Pattern_Generation", m_portHandle, Disable_Pattern_Generation);
-		setIntegerParam(voxtel_disable_test_pattern_generation, 1);
-
-		Do_Write_Integration_Time(m_portHandle, 100.0);
-		setDoubleParam(voxtel_integration_time, 100.0);
-
-		Do_Write_Threshold1(m_portHandle, 2.5);
-		setDoubleParam(voxtel_threashold_1, 2.5);
-
-		Do_Write_Threshold2(m_portHandle, 2.5);
-		setDoubleParam(voxtel_threashold_2, 2.5);
-
-		setIntegerParam(voxtel_pixel_test_inject_location_col, 255);
-		setIntegerParam(voxtel_pixel_test_inject_location_row, 255);
-
-		callParamCallbacks();
-
-		printme = 1;
-
-		printf("End Of  Voxtal Initialize All\n");
+		do_Initialize();
 	}
 	if(function == voxtel_frame_stop) {
 		Do_Write_Read("Frame_Stop", m_portHandle, Frame_Stop);
 		setIntegerParam(voxtel_frame_start, 0);
+		callParamCallbacks();
 	}
 	if(function == voxtel_frame_start) {
 		Do_Write_Read("Frame_Start", m_portHandle, Frame_Start);
 		setIntegerParam(voxtel_frame_stop, 0);
+		callParamCallbacks();
 	}
+
 	if (function == voxtel_counter_mode_select) {
 		switch (value)
 		{
@@ -384,27 +409,27 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 			break;
 		case 2:
 			Do_Write_Read("Counter_Mode_2", m_portHandle, Counter_Mode_2);
-			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+			Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
 			break;
 		case 3:
 			Do_Write_Read("Counter_Mode_3", m_portHandle, Counter_Mode_3);
-			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+			Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
 			break;
 		case 4:
 			break;
 		case 5:
 			Do_Write_Read("Counter_Mode_5", m_portHandle, Counter_Mode_5);
-			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+			Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
 			break;
 		case 6:
 			break;
 		case 7:
 			Do_Write_Read("Counter_Mode_7", m_portHandle, Counter_Mode_7);
-			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+			Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
 			break;
 		case 8:
 			Do_Write_Read("Counter_Mode_8", m_portHandle, Counter_Mode_8);
-			Do_Write_Read("Write_DSI_3", m_portHandle, Write_DSI_3);
+			Do_Write_Read("Write_DSI__3", m_portHandle, Write_DSI__3);
 			break;
 		}
 	}
@@ -427,18 +452,23 @@ asynStatus voxtel::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 	if (function == voxtel_enable_test_pattern_generation) {
 		Do_Write_Read("Enable_Pattern_Generation", m_portHandle, Enable_Pattern_Generation);
 		setIntegerParam(voxtel_disable_test_pattern_generation, 0);
+		callParamCallbacks();
 	}
 	if (function == voxtel_disable_test_pattern_generation) {
 		Do_Write_Read("Disable_Pattern_Generation", m_portHandle, Disable_Pattern_Generation);
 		setIntegerParam(voxtel_enable_test_pattern_generation, 0);
+		callParamCallbacks();
 	}
 	if (function == voxtel_print_dactable) {
 		Do_Write_Read("Print_DAC_Table", m_portHandle, "t0000");
 	}
 
-	if ((function == ADAcquire) & (value == 1)) epicsEventSignal(this->startEventId);
-
-	if ((function == ADAcquire) & (value == 0)) epicsEventSignal(this->stopEventId);
+	if ((function == ADAcquire) & (value == 1)) {
+		epicsEventSignal(this->startEventId);
+	}
+	if ((function == ADAcquire) & (value == 0)) {
+		epicsEventSignal(this->stopEventId);
+	}
 
 /* If this parameter belongs to a base class call its method */
 	
@@ -604,9 +634,79 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 	createParam("voxtel_disable_test_pattern_generation", asynParamInt32, &voxtel_disable_test_pattern_generation);
 	createParam("voxtel_print_dactable", asynParamInt32, &voxtel_print_dactable);
 
-//	printf("After createParams \n");
+	createParam("voxtel_VP01", asynParamInt32, &voxtel_VP01);
+	createParam("voxtel_VP02", asynParamInt32, &voxtel_VP02);
+	createParam("voxtel_VP03", asynParamInt32, &voxtel_VP03);
+	createParam("voxtel_VP04", asynParamInt32, &voxtel_VP04);
+	createParam("voxtel_VP05", asynParamInt32, &voxtel_VP05);
+	createParam("voxtel_VP06", asynParamInt32, &voxtel_VP06);
 
-	
+/*
+	createParam("voxtel_VP01", asynParamFloat64, &voxtel_VP01);
+	createParam("voxtel_VP02", asynParamFloat64, &voxtel_VP02);
+	createParam("voxtel_VP03", asynParamFloat64, &voxtel_VP03);
+	createParam("voxtel_VP04", asynParamFloat64, &voxtel_VP04);
+	createParam("voxtel_VP05", asynParamFloat64, &voxtel_VP05);
+	createParam("voxtel_VP06", asynParamFloat64, &voxtel_VP06);
+*/
+
+	createParam("voxtel_CC01", asynParamInt32, &voxtel_CC01);
+	createParam("voxtel_CC02", asynParamInt32, &voxtel_CC02);
+	createParam("voxtel_CC03", asynParamInt32, &voxtel_CC03);
+	createParam("voxtel_CC04", asynParamInt32, &voxtel_CC04);
+	createParam("voxtel_CC05", asynParamInt32, &voxtel_CC05);
+	createParam("voxtel_CC06", asynParamInt32, &voxtel_CC06);
+	createParam("voxtel_CC07", asynParamInt32, &voxtel_CC07);
+	createParam("voxtel_CC08", asynParamInt32, &voxtel_CC08);
+	createParam("voxtel_CC09", asynParamInt32, &voxtel_CC09);
+	createParam("voxtel_CC10", asynParamInt32, &voxtel_CC10);
+	createParam("voxtel_CC11", asynParamInt32, &voxtel_CC11);
+	createParam("voxtel_CC12", asynParamInt32, &voxtel_CC12);
+
+/*
+	createParam("voxtel_CC01", asynParamFloat64, &voxtel_CC01);
+	createParam("voxtel_CC02", asynParamFloat64, &voxtel_CC02);
+	createParam("voxtel_CC03", asynParamFloat64, &voxtel_CC03);
+	createParam("voxtel_CC04", asynParamFloat64, &voxtel_CC04);
+	createParam("voxtel_CC05", asynParamFloat64, &voxtel_CC05);
+	createParam("voxtel_CC06", asynParamFloat64, &voxtel_CC06);
+	createParam("voxtel_CC07", asynParamFloat64, &voxtel_CC07);
+	createParam("voxtel_CC08", asynParamFloat64, &voxtel_CC08);
+	createParam("voxtel_CC09", asynParamFloat64, &voxtel_CC09);
+	createParam("voxtel_CC10", asynParamFloat64, &voxtel_CC10);
+	createParam("voxtel_CC11", asynParamFloat64, &voxtel_CC11);
+	createParam("voxtel_CC12", asynParamFloat64, &voxtel_CC12);
+*/
+
+	createParam("voxtel_IREF", asynParamInt32, &voxtel_IREF);
+//	createParam("voxtel_IREF", asynParamFloat64, &voxtel_IREF);
+
+	createParam("voxtel_VV01", asynParamInt32, &voxtel_VV01);
+	createParam("voxtel_VV02", asynParamInt32, &voxtel_VV02);
+	createParam("voxtel_VV03", asynParamInt32, &voxtel_VV03);
+	createParam("voxtel_VV04", asynParamInt32, &voxtel_VV04);
+	createParam("voxtel_VV05", asynParamInt32, &voxtel_VV05);
+	createParam("voxtel_VV06", asynParamInt32, &voxtel_VV06);
+	createParam("voxtel_VV07", asynParamInt32, &voxtel_VV07);
+	createParam("voxtel_VV08", asynParamInt32, &voxtel_VV08);
+	createParam("voxtel_VV09", asynParamInt32, &voxtel_VV09);
+	createParam("voxtel_VV10", asynParamInt32, &voxtel_VV10);
+
+/*
+	createParam("voxtel_VV01", asynParamFloat, &voxtel_VV01);
+	createParam("voxtel_VV02", asynParamFloat, &voxtel_VV02);
+	createParam("voxtel_VV03", asynParamFloat, &voxtel_VV03);
+	createParam("voxtel_VV04", asynParamFloat, &voxtel_VV04);
+	createParam("voxtel_VV05", asynParamFloat, &voxtel_VV05);
+	createParam("voxtel_VV06", asynParamFloat, &voxtel_VV06);
+	createParam("voxtel_VV07", asynParamFloat, &voxtel_VV07);
+	createParam("voxtel_VV08", asynParamFloat, &voxtel_VV08);
+	createParam("voxtel_VV09", asynParamFloat, &voxtel_VV09);
+	createParam("voxtel_VV10", asynParamFloat, &voxtel_VV10);
+
+*/
+
+//	printf("After createParams \n");
 
 // Skip this, I have to initial EVERYTHING to a known state anyway.
 
@@ -623,6 +723,75 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 
 	setIntegerParam(voxtel_frame_stop, 1);
 	setIntegerParam(voxtel_disable_test_pattern_generation, 1);
+
+	setIntegerParam(voxtel_VP01, 0x828E);
+	setIntegerParam(voxtel_VP02, 0x828E);
+	setIntegerParam(voxtel_VP03, 0x0A34);
+	setIntegerParam(voxtel_VP04, 0x0A34);
+	setIntegerParam(voxtel_VP05, 0x0A34);
+	setIntegerParam(voxtel_VP06, 0x828E);
+
+	setIntegerParam(voxtel_CC01, 0x411A);
+	setIntegerParam(voxtel_CC02, 0x6CC2);
+	setIntegerParam(voxtel_CC03, 0x6CC2);
+	setIntegerParam(voxtel_CC04, 0x4D93);
+	setIntegerParam(voxtel_CC05, 0x4D93);
+	setIntegerParam(voxtel_CC06, 0x4D93);
+	setIntegerParam(voxtel_CC07, 0x4D93);
+	setIntegerParam(voxtel_CC08, 0x4D93);
+	setIntegerParam(voxtel_CC09, 0x4D93);
+	setIntegerParam(voxtel_CC10, 0x4D93);
+	setIntegerParam(voxtel_CC11, 0x4D93);
+	setIntegerParam(voxtel_CC12, 0x4D93);
+
+	setIntegerParam(voxtel_IREF, 0x4D93);
+
+	setIntegerParam(voxtel_VV01, 0xC1F0);
+	setIntegerParam(voxtel_VV02, 0xC1F0);
+	setIntegerParam(voxtel_VV03, 0x07C1);
+	setIntegerParam(voxtel_VV04, 0x0000);
+	setIntegerParam(voxtel_VV05, 0x0000);
+	setIntegerParam(voxtel_VV06, 0x0000);
+	setIntegerParam(voxtel_VV07, 0x0000);
+	setIntegerParam(voxtel_VV08, 0x0000);
+	setIntegerParam(voxtel_VV09, 0x0000);
+	setIntegerParam(voxtel_VV10, 0x0000);
+
+	setIntegerParam(voxtel_VP01, 0x828E);
+	setIntegerParam(voxtel_VP02, 0x828E);
+	setIntegerParam(voxtel_VP03, 0x0A34);
+	setIntegerParam(voxtel_VP04, 0x0A34);
+	setIntegerParam(voxtel_VP05, 0x0A34);
+	setIntegerParam(voxtel_VP06, 0x828E);
+
+	/*
+	setDoubleParam(voxtel_CC01, 0x411A);
+	setDoubleParam(voxtel_CC02, 0x6CC2);
+	setDoubleParam(voxtel_CC03, 0x6CC2);
+	setDoubleParam(voxtel_CC04, 0x4D93);
+	setDoubleParam(voxtel_CC05, 0x4D93);
+	setDoubleParam(voxtel_CC06, 0x4D93);
+	setDoubleParam(voxtel_CC07, 0x4D93);
+	setDoubleParam(voxtel_CC08, 0x4D93);
+	setDoubleParam(voxtel_CC09, 0x4D93);
+	setDoubleParam(voxtel_CC10, 0x4D93);
+	setDoubleParam(voxtel_CC11, 0x4D93);
+	setDoubleParam(voxtel_CC12, 0x4D93);
+
+	setDoubleParam(voxtel_IREF, 0x4D93);
+
+	setDoubleParam(voxtel_VV01, 0xC1F0);
+	setDoubleParam(voxtel_VV02, 0xC1F0);
+	setDoubleParam(voxtel_VV03, 0x07C1);
+	setDoubleParam(voxtel_VV04, 0x0000);
+	setDoubleParam(voxtel_VV05, 0x0000);
+	setDoubleParam(voxtel_VV06, 0x0000);
+	setDoubleParam(voxtel_VV07, 0x0000);
+	setDoubleParam(voxtel_VV08, 0x0000);
+	setDoubleParam(voxtel_VV09, 0x0000);
+	setDoubleParam(voxtel_VV10, 0x0000);
+*/
+
 //	printf("Done with voxtel set params \n");
 
 
@@ -665,8 +834,8 @@ voxtel::voxtel(const char *portName, int maxSizeX, int maxSizeY, NDDataType_t da
 
 	MdigControl(MilDigitizer, M_GRAB_SCALE, 1);
 
-	do_matrox_diag_1();
-	do_matrox_diag_2();
+//	do_matrox_diag_1();
+//	do_matrox_diag_2();
 
 
 	/*get width & height of cam*/

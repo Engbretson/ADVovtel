@@ -95,7 +95,10 @@
      <enum>caCamera::Yes</enum>
     </property>
     <property name="automaticLevels" stdset="0">
-     <bool>false</bool>
+     <bool>true</bool>
+    </property>
+    <property name="minLevel">
+     <string notr="true">0</string>
     </property>
     <property name="ColorMap" stdset="0">
      <enum>caCamera::grey</enum>

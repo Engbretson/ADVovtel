@@ -18,7 +18,7 @@ epicsEnvSet("YSIZE",  "192")
 # The maximum image height; used to set the maximum size for this driver and for column profiles in the NDPluginStats plugin
 epicsEnvSet("XSIZE",  "384")
 # The maximum number of time series points in the NDPluginStats plugin
-epicsEnvSet("NCHANS", "2048")
+epicsEnvSet("NCHANS", "500")
 # The maximum number of frames buffered in the NDPluginCircularBuff plugin
 epicsEnvSet("CBUFFS", "500")
 # The maximum number of threads for plugins which can run in multiple threads
@@ -32,8 +32,9 @@ epicsEnvSet("ENGINEER","Engbretson")
 epicsEnvSet("PREFIX",  "Voxtel1:")
 epicsEnvSet("PORT",   "VOXTELIOC")
 epicsEnvSet("GROUP",   "BCDA")
+epicsEnvSet("COMPILER", "MSVC2017")
 
-asynSetMinTimerPeriod(0.001)
+asynSetMinTimerPeriod(0.0001)
 
 # The EPICS environment variable EPICS_CA_MAX_ARRAY_BYTES needs to be set to a value at least as large
 # as the largest image that the standard arrays plugin will send.
@@ -99,13 +100,16 @@ dbLoadRecords("NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=Image1,ADDR=0,
 
 iocInit()
 
-# save things every thirty seconds
-
-create_monitor_set("auto_settings.req", 30, "P=$(PREFIX),R=cam1:")
-
 dbl > pvs.txt
 
 dbpf "$(PREFIX)cam1:Voxtel_Initialize","1"
+
+# save things every thirty seconds
+
+create_monitor_set("auto_settings.req", 30, "P=$(PREFIX),R=cam1:")
+create_monitor_set("voxtel_settings.req", 30, "P=$(PREFIX),R=cam1:")
+create_monitor_set("voxtel_bias_settings.req", 30, "P=$(PREFIX),R=cam1:")
+
 
 
 

@@ -1,0 +1,554 @@
+
+file {
+	name="C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\adl\Reference_Voltage.adl"
+	version=030109
+}
+display {
+	object {
+		x=385
+		y=303
+		width=200
+		height=285
+	}
+	clr=14
+	bclr=4
+	cmap=""
+	gridSpacing=5
+	gridOn=0
+	snapToGrid=0
+}
+"color map" {
+	ncolors=65
+	colors {
+		ffffff,
+		ececec,
+		dadada,
+		c8c8c8,
+		bbbbbb,
+		aeaeae,
+		9e9e9e,
+		919191,
+		858585,
+		787878,
+		696969,
+		5a5a5a,
+		464646,
+		2d2d2d,
+		000000,
+		00d800,
+		1ebb00,
+		339900,
+		2d7f00,
+		216c00,
+		fd0000,
+		de1309,
+		be190b,
+		a01207,
+		820400,
+		5893ff,
+		597ee1,
+		4b6ec7,
+		3a5eab,
+		27548d,
+		fbf34a,
+		f9da3c,
+		eeb62b,
+		e19015,
+		cd6100,
+		ffb0ff,
+		d67fe2,
+		ae4ebc,
+		8b1a96,
+		610a75,
+		a4aaff,
+		8793e2,
+		6a73c1,
+		4d52a4,
+		343386,
+		c7bb6d,
+		b79d5c,
+		a47e3c,
+		7d5627,
+		58340f,
+		99ffff,
+		73dfff,
+		4ea5f9,
+		2a63e4,
+		0a00b8,
+		ebf1b5,
+		d4db9d,
+		bbc187,
+		a6a462,
+		8b8239,
+		73ff6b,
+		52da3b,
+		3cb420,
+		289315,
+		1a7309,
+	}
+}
+rectangle {
+	object {
+		x=5
+		y=5
+		width=190
+		height=275
+	}
+	"basic attribute" {
+		clr=14
+		fill="outline"
+	}
+}
+"text entry" {
+	object {
+		x=88
+		y=25
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV01"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=25
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV01_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=25
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Vth1 VV01"
+	align="horiz. right"
+}
+text {
+	object {
+		x=5
+		y=5
+		width=170
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Reference Voltage"
+	align="horiz. centered"
+}
+text {
+	object {
+		x=10
+		y=50
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Vth2 VV02"
+	align="horiz. right"
+}
+"text entry" {
+	object {
+		x=88
+		y=50
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV02"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=50
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV02_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=75
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VrDarkI VV03"
+	align="horiz. right"
+}
+"text entry" {
+	object {
+		x=88
+		y=75
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV03"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=75
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV03_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=100
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="TempRef VV04"
+	align="horiz. right"
+}
+"text entry" {
+	object {
+		x=88
+		y=100
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV04"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=100
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV04_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=125
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Aux VV05"
+	align="horiz. right"
+}
+"text entry" {
+	object {
+		x=88
+		y=125
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV05"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=125
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV05_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=150
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Aux VV06"
+	align="horiz. right"
+}
+"text entry" {
+	object {
+		x=88
+		y=150
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV06"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=150
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV06_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=88
+		y=175
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV07"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=88
+		y=200
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV08"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=88
+		y=225
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV09"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=88
+		y=250
+		width=50
+		height=20
+	}
+	control {
+		chan="$(P)$(R)Voxtel_VV10"
+		clr=14
+		bclr=4
+	}
+	limits {
+	}
+}
+text {
+	object {
+		x=10
+		y=175
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VV07 VV07"
+	align="horiz. right"
+}
+text {
+	object {
+		x=10
+		y=200
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VV08 VV08"
+	align="horiz. right"
+}
+text {
+	object {
+		x=10
+		y=225
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VV09 VV09"
+	align="horiz. right"
+}
+text {
+	object {
+		x=10
+		y=250
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="VV10 VV10"
+	align="horiz. right"
+}
+"text update" {
+	object {
+		x=138
+		y=250
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV10_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=225
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV09_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=200
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV08_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}
+"text update" {
+	object {
+		x=138
+		y=175
+		width=50
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)Voxtel_VV07_RBV"
+		clr=14
+		bclr=4
+	}
+	align="horiz. right"
+	limits {
+	}
+}

@@ -4,7 +4,11 @@ set EPICS_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\v
 set CAQTDM_DISPLAY_PATH=C:\epics\synApps_5_8\support\areaDetector-R3-1\ADVoxtel\voxtelApp\op\ui;C:\epics\synApps_5_8\support\areaDetector-R3-1\ADCore\ADApp\op\ui\autoconvert
 
 start medm -x -macro "P=Voxtel1:, R=cam1:" VoxtelDetector.adl 
-start caqtdm -x -macro "P=Voxtel1:, R=cam1:" ad_cam_image.ui
+rem start medm -x -macro "P=Voxtel1:, R=cam1:" Power_Supply.adl 
+rem start medm -x -macro "P=Voxtel1:, R=cam1:" Reference_Current.adl 
+rem start medm -x -macro "P=Voxtel1:, R=cam1:" Reference_Voltage.adl 
+
+rem start caqtdm -x -macro "P=Voxtel1:, R=cam1:" ad_cam_image.ui
   
 rem ..\..\bin\windows-x64-static\voxtelApp.exe st.cmd
 
