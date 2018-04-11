@@ -1,0 +1,15 @@
+file "ADBase_settings.req", P=$(P), R=$(R) 
+#$(P)$(R)Voxtel_Initialize
+#$(P)$(R)Counter_Mode_Select
+#$(P)$(R)Integration_Time
+#$(P)$(R)Frame_Start
+#$(P)$(R)Frame_Stop
+#$(P)$(R)Threashold_1
+#$(P)$(R)Threashold_2
+$(P)$(R)Pixel_Inject_Row
+$(P)$(R)Pixel_Inject_Col
+#$(P)$(R)Pixel_Inject
+#$(P)$(R)Voxtel_Enable_TestPattern
+#$(P)$(R)Voxtel_Disable_TestPattern
+
+

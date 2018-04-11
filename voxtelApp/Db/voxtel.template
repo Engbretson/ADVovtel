@@ -1,0 +1,671 @@
+
+include "ADBase.template"
+
+record(longout, "$(P)$(R)Voxtel_Initialize") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_initialize")
+  field(DISA, "0")
+}
+
+#record(longin, "$(P)$(R)Voxtel_Initialize_RBV") {
+#  field(DTYP, "asynInt32")
+#  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_initialize")
+#  field(SCAN, "I/O Intr")
+#  field(DISA, "0")
+#}
+
+record(mbbi, "$(P)$(R)Voxtel_Initialize_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_initialize")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Active")
+  field(ONVL, "1")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+
+record(mbbi, "$(P)$(R)Counter_Mode_Select_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_counter_mode_select")
+  field(ZRST, "Mode 2")
+  field(ZRVL, "2")
+  field(ONST, "Mode 3")
+  field(ONVL, "3")
+  field(TWST, "Mode 5")
+  field(TWVL, "5")
+  field(THST, "Mode 7")
+  field(THVL, "7")
+  field(FRST, "Mode 8")
+  field(FRVL, "8")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(mbbo, "$(P)$(R)Counter_Mode_Select") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_counter_mode_select")
+  field(ZRST, "Mode 2")
+  field(ZRVL, "2")
+  field(ONST, "Mode 3")
+  field(ONVL, "3")
+  field(TWST, "Mode 5")
+  field(TWVL, "5")
+  field(THST, "Mode 7")
+  field(THVL, "7")
+  field(FRST, "Mode 8")
+  field(FRVL, "8")
+}
+
+record(ai, "$(P)$(R)Integration_Time_RBV") {
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_integration_time")
+  field(PREC, "3")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(ao, "$(P)$(R)Integration_Time") {
+    field(PINI, "NO")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_integration_time")
+  field(PREC, "3")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Frame_Start") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_start")
+  field(DISA, "0")
+}
+
+#record(longin, "$(P)$(R)Frame_Start_RBV") {
+#  field(DTYP, "asynInt32")
+#  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_start")
+#  field(SCAN, "I/O Intr")
+#  field(DISA, "0")
+#}
+
+record(mbbi, "$(P)$(R)Frame_Start_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_start")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Active")
+  field(ONVL, "1")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Frame_Stop") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_stop")
+  field(DISA, "0")
+}
+
+#record(longin, "$(P)$(R)Frame_Stop_RBV") {
+#  field(DTYP, "asynInt32")
+#  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_stop")
+#  field(SCAN, "I/O Intr")
+#  field(DISA, "0")
+#}
+
+record(mbbi, "$(P)$(R)Frame_Stop_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_frame_stop")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Active")
+  field(ONVL, "1")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+
+record(ai, "$(P)$(R)Threashold_1_RBV") {
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_threashold_1")
+  field(PREC, "3")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(ao, "$(P)$(R)Threashold_1") {
+    field(PINI, "NO")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_threashold_1")
+  field(PREC, "3")
+  field(DISA, "0")
+}
+
+record(ai, "$(P)$(R)Threashold_2_RBV") {
+  field(DTYP, "asynFloat64")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_threashold_2")
+  field(PREC, "3")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(ao, "$(P)$(R)Threashold_2") {
+    field(PINI, "NO")
+  field(DTYP, "asynFloat64")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_threashold_2")
+  field(PREC, "3")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Pixel_Inject_Row_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_pixel_test_inject_location_row")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Pixel_Inject_Row") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_pixel_test_inject_location_row")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Pixel_Inject_Col_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_pixel_test_inject_location_col")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Pixel_Inject_Col") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_pixel_test_inject_location_col")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Pixel_Inject") {
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_pixel_test_inject_location")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_Enable_TestPattern") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_enable_test_pattern_generation")
+  field(DISA, "0")
+}
+
+#record(longin, "$(P)$(R)Voxtel_Enable_TestPattern_RBV") {
+#  field(DTYP, "asynInt32")
+#  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_enable_test_pattern_generation")
+#  field(SCAN, "I/O Intr")
+#  field(DISA, "0")
+#}
+
+record(mbbi, "$(P)$(R)Voxtel_Enable_TestPattern_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_enable_test_pattern_generation")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Active")
+  field(ONVL, "1")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+
+record(longout, "$(P)$(R)Voxtel_Disable_TestPattern") {
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_disable_test_pattern_generation")
+  field(DISA, "0")
+}
+
+#record(longin, "$(P)$(R)Voxtel_Disable_TestPattern_RBV") {
+#  field(DTYP, "asynInt32")
+#  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_disable_test_pattern_generation")
+#  field(SCAN, "I/O Intr")
+#  field(DISA, "0")
+#}
+
+record(mbbi, "$(P)$(R)Voxtel_Disable_TestPattern_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_disable_test_pattern_generation")
+  field(ZRST, "Disabled")
+  field(ZRVL, "0")
+  field(ONST, "Active")
+  field(ONVL, "1")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+
+record(longout, "$(P)$(R)Voxtel_Print_DACTable") {
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_print_dactable")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_Print_DACTable_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_print_dactable")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_VP01_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP01")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP01") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP01")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VP02_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP02")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP02") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP02")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VP03_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP03")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP03") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP03")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VP04_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP04")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP04") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP04")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VP05_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP05")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP05") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP05")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VP06_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP06")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VP06") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VP06")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC01_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC01")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC01") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC01")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC02_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC02")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC02") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC02")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC03_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC03")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC03") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC03")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC04_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC04")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC04") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC04")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC05_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC05")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC05") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC05")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC06_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC06")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC06") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC06")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC07_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC07")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC07") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC07")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC08_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC08")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC08") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC08")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC09_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC09")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC09") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC09")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC10_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC10")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC10") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC10")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC11_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC11")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC11") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC11")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_CC12_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC12")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_CC12") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_CC12")
+  field(DISA, "0")
+}
+
+
+record(longin, "$(P)$(R)Voxtel_IREF_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_IREF")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_IREF") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_IREF")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VV01_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV01")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV01") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV01")
+  field(DISA, "0")
+}
+
+record(longin, "$(P)$(R)Voxtel_VV02_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV02")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV02") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV02")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV03_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV03")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV03") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV03")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV04_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV04")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV04") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV04")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV05_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV05")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV05") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV05")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV06_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV06")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV06") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV06")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV07_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV07")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV07") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV07")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV08_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV08")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV08") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV08")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV09_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV09")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV09") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV09")
+  field(DISA, "0")
+}
+record(longin, "$(P)$(R)Voxtel_VV10_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV10")
+  field(SCAN, "I/O Intr")
+  field(DISA, "0")
+}
+
+record(longout, "$(P)$(R)Voxtel_VV10") {
+    field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))voxtel_VV10")
+  field(DISA, "0")
+}
+
